@@ -28,6 +28,10 @@ The goals of today's exercise are:
 
 Go to www.github.com and sign up if you aren't already  
 ![__Figure__: _GitHub_'s front page](images/github_front_page.png)  
+
+If you are not already using personal tokens for authentication, have a look here:  
+https://www.edgoad.com/2021/02/using-personal-access-tokens-with-git-and-github.html
+
 Then install _R_ and _RStudio_ if you haven't already
 
 ## _R_
