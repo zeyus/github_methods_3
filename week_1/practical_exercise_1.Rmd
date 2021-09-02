@@ -1,16 +1,34 @@
 ---
 title: "practical_exercise_1, Methods 3, 2021, autumn semester"
-author: '[YOUR NAME]'
-date: "[DATE]"
+author: '[FILL IN YOUR NAME]'
+date: "[FILL IN THE DATE]"
 output: html_document
 ---
+
+<style type="text/css">
+  body{
+  font-size: 14pt;
+}
+</style>
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Prepare your _R_ and _Python_ environments
-Today's first goal is to get your _R_ and _Python_ environments up and running  
+# Practical Exercise 1
+The goals of today's exercise are:
+
+1) create a _GitHub_ account and link it with _RStudio_ and create a new repository 
+2) getting you back into _R_ and to get you acquainted with _Python_
+3) brushing up on the general linear model
+
+# 1) Creating a _GitHub_ account and linking it to RStudio
+
+## _GitHub_
+
+Go to www.github.com and sign up if you aren't already  
+![__Figure__: _GitHub_'s front page](images/github_front_page.png)  
+Then install _R_ and _RStudio_ if you haven't already
 
 ## _R_
 
@@ -21,30 +39,38 @@ _R_ can be downloaded and installed from https://mirrors.dotsrc.org/cran/ (Danis
 Can also be installed from the link above, but it is more convenient to use your package manager, e.g.
 
 ![__Figure__: my package manager](images/package_manager.png)
+
 ### _RStudio_ (IDE: Integrated Development Editor)
 
 _RStudio_ can be downloaded from https://www.rstudio.com/products/rstudio/download/
 
-### Packages
+## Link _GitHub_ and _RStudio_
 
-We need the package _lme4_ for specifying mixed effects models
+Link your _GitHub_ account to _RStudio_ and create a repository for the assignments and practical exercises.  
+Follow this tutorial: https://happygitwithr.com (Chapter 12)
 
-```{r, echo=TRUE, eval=FALSE}
-install.packages("lme4")
-## but can also be installed from the package manager (Linux) (r-cran-lme4)
-```
+# 2) Prepare your _R_ and _Python_ environments
+Today's first goal is to get your _R_ and _Python_ environments up and running  
+
+## _R_
+
+### _R_ Packages
+
+Make sure you can run _R Markdown_; create a new _R Markdown_ document - if you're asked to install extra packages, do so.  
+We'll need more packages later, but we'll install as we go...
 
 ## _Python_
 
 Due to the fact that _Python_ packages have a lot of interdependencies that may cause compability problems if you keep everything in one big environment, it is advisable to use a package management system like _Conda_.  
 I propose using _Miniconda_ that can be downloaded from here: https://docs.conda.io/en/latest/miniconda.html (choose 64-bit)  
-We'll not do much with i
-
+  
+We'll not do much with it today, but will return to it for the machine learning part.  
+  
 An advantage is that separate environments can be maintained that are each focused on its own niche:  
 
 ![__Figure__: my environments: _mne_ is for analysis of magnetoencephalographic data, _psychopy_ is for presenting experiment scenarios, _fsl_ is for processing magnetic resonance imaging data](images/list_of_environments.png)
 
-Then use the yml-file from GitHub to create the appropriate environment:
+Then use the yml-file from _GitHub_ to create the appropriate environment:
 ```{bash, eval=FALSE}
 # CODE TO BE RUN IN A BASH TERMINAL
 ## create environment
@@ -69,10 +95,13 @@ a_list = [1, 'a', 2.3] # square brackets initialize lists that can contain any c
 print(a_list[0]) ## prints the first entry
 print(a_list[1]) ## prints the second entry
 ```
-#### zero-indexing (reference)
+### Zero-indexing (reference)
 https://www.cs.utexas.edu/users/EWD/transcriptions/EWD08xx/EWD831.html
 
-# Remembering the General Linear Model
+# 3) Brushing up on the General Linear Model
+
+We'll do a light start and get you back in the game of thinking about formulae and how to build your linear models
+
 
 ## Formulae
 ```{r, eval=FALSE}
