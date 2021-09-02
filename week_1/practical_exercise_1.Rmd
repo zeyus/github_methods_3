@@ -100,8 +100,8 @@ https://www.cs.utexas.edu/users/EWD/transcriptions/EWD08xx/EWD831.html
 
 # 3) Brushing up on the General Linear Model
 
-We'll do a light start and get you back in the game of thinking about formulae and how to build your linear models
-
+We'll do a light start and get you back in the game of thinking about formulae and how to build your linear models  
+Finally, we'll have a few exercises, finishing off today's practical exercise  
 
 ## Formulae
 ```{r, eval=FALSE}
