@@ -103,7 +103,7 @@ https://www.cs.utexas.edu/users/EWD/transcriptions/EWD08xx/EWD831.html
 We'll do a light start and get you back in the game of thinking about formulae and how to build your linear models  
 Finally, we'll have a few exercises, finishing off today's practical exercise  
 
-## Formulae
+## A list of formulae
 ```{r, eval=FALSE}
 formula <- y ~ x ## y as a function of x
 y ~ 1 ## model the intercept for "y"
