@@ -1,7 +1,7 @@
 ---
 title: "practical_exercise_1, Methods 3, 2021, autumn semester"
-author: '[FILL IN YOUR NAME]'
-date: "[FILL IN THE DATE]"
+author: 'Luke Ring'
+date: "2021-09-15"
 output: html_document
 ---
 
@@ -13,6 +13,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+install.packages()
 ```
 
 # Practical Exercise 1
@@ -75,7 +76,7 @@ An advantage is that separate environments can be maintained that are each focus
 ![__Figure__: my environments: _mne_ is for analysis of magnetoencephalographic data, _psychopy_ is for presenting experiment scenarios, _fsl_ is for processing magnetic resonance imaging data](images/list_of_environments.png)
 
 Then use the yml-file from _GitHub_ to create the appropriate environment:
-```{bash, eval=FALSE}
+```{powershell, eval=FALSE}
 # CODE TO BE RUN IN A BASH TERMINAL
 ## create environment
 conda env create -f methods3_environment.yml
@@ -83,6 +84,7 @@ conda env create -f methods3_environment.yml
 conda activate methods3
 ## after activation, you can run Spyder, (IDE)
 spyder
+
 ```
 
 ![__Figure__: _Spyder_](images/spyder.png)
@@ -165,16 +167,23 @@ REMEMBER: In your report, make sure to include code that can reproduce the answe
 ## Exercise 1
 The general linear model: $Y = X \beta + \epsilon$:  
 Do a linear regression, expressing fuel usage as a function of weight using the function __lm__  
-```{r, eval=FALSE}
-data(mtcars)
-model <- lm(formula=..., data=...)
-```
+
 1. extract $\hat{\beta}$, $Y$, $\hat{Y}$, $X$ and $\epsilon$ from __model__ (hint: have a look at the function __model.matrix__)  
     i. create a plot that illustrates $Y$ and $\hat{Y}$ (if you are feeling ambitious, also include $\epsilon$ (hint: you can use the function __arrows__))
 2. estimate $\beta$ for a quadratic model ($y = {\beta}_{2} x^2 + {\beta}_{1} x + {\beta}_{0}$) using ordinary least squares _without_ using __lm__; $\hat{\beta} = {({X}^{T} X)}^{-1} {X}^{T} Y$ (hint: add a third column to $X$ from step 1)
 3. compare your acquired $\hat{\beta}$ with the output of the corresponding quadratic model created using __lm__ (hint: use the function __I__, see details under help and the sub-section formula operators here: https://www.datacamp.com/community/tutorials/r-formula-tutorial)  
     i. create a plot that illustrates $Y$ and $\hat{Y}$ (if you are feeling ambitious, also include $\epsilon$ (hint: you can use the function __arrows__))  
 
+```{r}
+data(mtcars)
+m1 <- lm(formula=mpg ~ wt, data=mtcars)
+summary(m1)
+coef(m1)
+model.matrix(m1)
+residuals(m1)
+
+
+```
 ## Exercise 2
 Compare the plotted quadratic fit to the linear fit  
 
@@ -192,7 +201,8 @@ lm(mpg ~ 1, data=mtcars)
 Doing a logistic regression - estimating the probability that a car has automatic transmission (0) or manual transmission (1) based on its weight
 ```{r, eval=FALSE}
 data(mtcars)
-logistic.model <- glm(formula=..., data=..., family='binomial)
+logistic.model <- glm(formula=am ~ wt, data=mtcars, family='binomial')
+summary(logistic.model)
 ```
 
 Probabilities live on the range $(0, 1)$ - using the so-called logit function as a "link-function" we can map these onto the range $(-\infty, \infty)$, i.e. the real numbers.  
