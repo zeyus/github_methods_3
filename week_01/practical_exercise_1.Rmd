@@ -2,7 +2,13 @@
 title: "practical_exercise_1, Methods 3, 2021, autumn semester"
 author: 'Luke Ring'
 date: "2021-09-15"
-output: html_document
+output:
+  html_document:
+    theme: darkly
+    highlight: breezedark
+    css: knit_style_luke.css
+    code_folding: show
+    toc: true
 ---
 
 <style type="text/css">
@@ -12,7 +18,8 @@ output: html_document
 </style>
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.width = 8, fig.height = 8, echo = TRUE)
+options(digits = 4)
 pacman::p_load("tidyverse")
 ```
 
@@ -114,18 +121,20 @@ rss_quad
 rss_cube
 ```
     iii. what's the estimated value of the "cubic" (${\beta}_3$) parameter? Comment on this!  
-```{r ex2_3iii}
 
+```{r ex2_3iii}
+beta_estimate_cube[4]
 ```
+
+> This value is the least squares estimate of the fourth model parameter. 
 
 4. bonus question: which summary statistic is the fitted value (_Intercept_ or ${\beta}_0$ in $y = {\beta}_0$) below identical to?
 ```{r ex2_4, echo=FALSE}
-lm(mpg ~ 1, data = mtcars)
+summary(lm(mpg ~ 1, data = mtcars))
 ```
 ## Exercise 3
 Doing a logistic regression - estimating the probability that a car has automatic transmission (0) or manual transmission (1) based on its weight
 ```{r ex3}
-data(mtcars)
 logistic.model <- glm(formula = am ~ wt, data = mtcars, family = "binomial")
 summary(logistic.model)
 ```
@@ -135,27 +144,63 @@ Probabilities live on the range $(0, 1)$ - using the so-called logit function as
 What we model in this case is: $Pr(y = 1) = logit^{-1}(X \beta)$, i.e. the probability of a car having manual transmission, given its weight. $X \beta$ is called the linear predictor; compare with $Y = X \beta + \epsilon$ 
 It is helpful to define the logit function and its inverse function for the following:  
 
-```{r}
+```{r link_funcs}
 logit <- function(x) log(x / (1 - x))
 inv.logit <- function(x) exp(x) / (1 + exp(x))
 ```
 
 1. plot the fitted values for __logistic.model__:  
-    i. what is the relation between the __linear.predictors__ and the __fitted_values__ of the __logistic.model__ object?
 
 ```{r ex3_1}
-plot(logistic.model)
 fv <- fitted.values(logistic.model)
-lp <- coef(logistic.model)
-lp
-
-ggplot(mtcars, aes(x = wt))
-
-fv
+plot(fv, mtcars$wt)
 ```
+    
+    i. what is the relation between the __linear.predictors__ and the __fitted_values__ of the __logistic.model__ object?
+
+```{r ex3_1i}
+lp <- predict(logistic.model)
+
+fv == inv.logit(lp)
+logit(fv) == lp
+```
+> We can see that the linear predictors are the same as the logit transformed fitted values; and, the inverse logit transformed linear predictors are the same as the fitted values. 
+> In this case, the linear predictions are less meaningful as a car cannot be (well, at least not in this data set) part automatic and part manual, so the fitted values provide a range from 0 to 1 which we can use with a threshold to predict if a car is automatic or manual based on the weight.
+> ex: If we set the threshold to 0.5, values above 0.5 would predict manual transmission.
+
 2. plot the logistic function, you've estimated based on your $\hat{\beta}$, (not just the fitted values). Use an _xlim_ of (0, 7)
+
+```{r ex3_2}
+logistic.beta <- coef(logistic.model)
+
+logistic.func <- function(x) inv.logit(x * logistic.beta[2] + logistic.beta[1])
+
+plot(logistic.func, xlim = c(0, 7))
+
+```
+
     i. what's the interpretation of the estimated $\hat{\beta}_0$ (the _Intercept_)
+```{r ex3_2i}
+logistic.beta[1]
+logistic.func(0)
+```
+> The $\hat{\beta}_0$ is the prediction for when x (or weight in this case) is 0. Using the plot and output above, we can see that when the weight is 0, the function would predict a probability of 0.999941 for the car to be manual.
+
+
     ii. calculate the estimated probability that the Pontiac Firebird has automatic transmission, given its weight
+
+```{r ex3_2ii}
+wt_firebird <- mtcars["Pontiac Firebird", ]$wt
+
+# we can use the function from before, but as 
+# it predicts manual transmission, to get probability
+# for a car to be auto, we need to do 1 - P(X = "manual")
+prob_firebird_auto <- 1 - logistic.func(wt_firebird)
+prob_firebird_auto
+```
+
+> this gives us a probability of 0.9687 that the pontiac firebird is automatic.
+
     iii. bonus question - plot the logistic function and highlight all the cars where we guessed wrongly, if we used the following "quantizer" function:
     
 \begin{equation}
@@ -165,46 +210,60 @@ fv
     0 (automatic), & \text{otherwise}
   \end{cases}
 \end{equation}    
+
+```{r ex3_2iii}
+
+classify <- function(x) {
+  manual <- ifelse(logistic.func(x) >= 0.5, 1, 0)
+  manual
+}
+cars_classified <- mtcars
+cars_classified$plotlabel <- rownames(cars_classified)
+cars_classified <- cars_classified %>% 
+  mutate(model_prediction = classify(wt),
+    model_correct = (classify(wt) == am),
+    plotlabel = ifelse(model_correct == FALSE, plotlabel, ""))
+
+
+cars_classified %>%
+  ggplot(aes(wt, am, label = plotlabel)) +
+  geom_point(aes(color = model_correct)) +
+  geom_text(aes(y = 0.5), angle = 90) +
+  geom_smooth(method = "glm", se = FALSE, method.args = list(family = "binomial"))
+
+```
     
 3. plot quadratic fit alongside linear fit  
+
+```{r 3_3}
+logistic.modelq <- glm(formula = am ~ wt + I(wt^2), data = mtcars, family = "binomial")
+
+mtcars %>%
+  ggplot(aes(wt, am)) +
+  geom_point() +
+  geom_smooth(method = "glm", se = FALSE, method.args = list(family = "binomial"), color = "red") +
+  geom_smooth(method = "glm", se = FALSE, method.args = list(family = "binomial"), color = "blue", formula = y ~ x + I(x^2))
+
+```
+
     i. judging visually, does adding a quadratic term make a difference?
+
+> for these data, not in any practical way, although it does push the 0.5 threshold slightly further on the x (weight) axis
+
     ii. check the details in the help of the AIC function - which of the models provide the better fit according to the AIC values and the residual deviance respectively?
+```{r 3_3ii}
+
+AIC(logistic.model, logistic.modelq)
+
+deviance(logistic.model)
+deviance(logistic.modelq)
+
+```
+> The AIC value is lower for the linear model, indicating that it is a better fit. 
+> The quadratic model has lower residual deviance, indicating that it might be a closer fit.
+
     iii. in your own words, why might it be good to penalise a model like the quadratic model, we just fitted.
     
-# Next time
-We are going to looking at extending our models with so called random effects. We need to install the package "lme4" for this. Run the code below or install it from your package manager (Linux)  
-```{r, eval=FALSE}
-install.packages("lme4")
-```
-We can fit a model like this:
+> By adding extra terms to a model function, the shape can more closely fit data in the sample, but doing so increases the likelihood of an overfitted model. If we use the model we created as an example, you might be able to make a function that fits the sample perfectly, but it would be useless for extrapolating to cars outside this exact data set.
 
-```{r}
-library(lme4)
-mixed.model <- lmer(mpg ~ wt + (1 | cyl), data = mtcars)
-```
 
-They result in plots like these:
-```{r}
-par(font.lab = 2, font.axis = 2, cex = 1.2)
-plot(mtcars$wt, fitted.values(mixed.model),
-  main = "Linear regression with group intercepts (n cylinders)",
-  xlab = "Weight (lb/1000)", ylab = "Miles/(US) gallon",
-  pch = 3
-)
-```
-
-and this
-```{r}
-mixed.model <- lmer(mpg ~ wt + (wt | cyl), data = mtcars)
-plot(mtcars$wt, fitted.values(mixed.model),
-  main = "Linear regression with group intercepts and group slopes (n cylinders)",
-  xlab = "Weight (lb/1000)", ylab = "Miles/(US) gallon",
-  pch = 3
-)
-``` 
-
-but also new warnings like:  
-
-Warning:
-In checkConv(attr(opt, "derivs"), opt\$par, ctrl = control$checkConv,  :
-  Model failed to converge with max|grad| = 0.0121962 (tol = 0.002, component 1)
