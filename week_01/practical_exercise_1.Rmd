@@ -162,9 +162,9 @@ plot(fv, mtcars$wt)
 lp <- predict(logistic.model)
 
 fv == inv.logit(lp)
-logit(fv) == lp
+
 ```
-> We can see that the linear predictors are the same as the logit transformed fitted values; and, the inverse logit transformed linear predictors are the same as the fitted values. 
+> We can see that the fitted values are the same as the logit transformed linear predictions.
 > In this case, the linear predictions are less meaningful as a car cannot be (well, at least not in this data set) part automatic and part manual, so the fitted values provide a range from 0 to 1 which we can use with a threshold to predict if a car is automatic or manual based on the weight.
 > ex: If we set the threshold to 0.5, values above 0.5 would predict manual transmission.
 
