@@ -13,7 +13,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-install.packages()
+pacman::p_load("tidyverse")
 ```
 
 # Practical Exercise 1
@@ -169,29 +169,96 @@ The general linear model: $Y = X \beta + \epsilon$:
 Do a linear regression, expressing fuel usage as a function of weight using the function __lm__  
 
 1. extract $\hat{\beta}$, $Y$, $\hat{Y}$, $X$ and $\epsilon$ from __model__ (hint: have a look at the function __model.matrix__)  
-    i. create a plot that illustrates $Y$ and $\hat{Y}$ (if you are feeling ambitious, also include $\epsilon$ (hint: you can use the function __arrows__))
-2. estimate $\beta$ for a quadratic model ($y = {\beta}_{2} x^2 + {\beta}_{1} x + {\beta}_{0}$) using ordinary least squares _without_ using __lm__; $\hat{\beta} = {({X}^{T} X)}^{-1} {X}^{T} Y$ (hint: add a third column to $X$ from step 1)
-3. compare your acquired $\hat{\beta}$ with the output of the corresponding quadratic model created using __lm__ (hint: use the function __I__, see details under help and the sub-section formula operators here: https://www.datacamp.com/community/tutorials/r-formula-tutorial)  
-    i. create a plot that illustrates $Y$ and $\hat{Y}$ (if you are feeling ambitious, also include $\epsilon$ (hint: you can use the function __arrows__))  
-
 ```{r}
 data(mtcars)
+
 m1 <- lm(formula=mpg ~ wt, data=mtcars)
+
 summary(m1)
-coef(m1)
-model.matrix(m1)
-residuals(m1)
+
+X <- model.matrix(m1)
+beta_hat <- coef(m1)
+Y <- mtcars$mpg
+Y_hat <- predict(m1)
+epsilon <- residuals(m1)
 
 
 ```
+    i. create a plot that illustrates $Y$ and $\hat{Y}$ (if you are feeling ambitious, also include $\epsilon$ (hint: you can use the function __arrows__))
+```{r}
+ggplot(mtcars, aes(x = X[, "wt"])) +
+  geom_point(aes(y = Y)) +
+  geom_line(aes(y = Y_hat))
+```
+2. estimate $\beta$ for a quadratic model ($y = {\beta}_{2} x^2 + {\beta}_{1} x + {\beta}_{0}$) using ordinary least squares _without_ using __lm__; $\hat{\beta} = {({X}^{T} X)}^{-1} {X}^{T} Y$ (hint: add a third column to $X$ from step 1)
+```{r}
+X <- cbind(X, wt2 = mtcars$wt^2)
+tX <- t(X)
+
+beta_estimate <- (solve(tX %*% X) %*% tX %*% Y)
+beta_estimate
+
+Y_hat2 <- beta_estimate[3]*X[, "wt2"] + beta_estimate[2]*X[, "wt"] + beta_estimate[1]
+episilon_quad <- Y - Y_hat2
+```
+3. compare your acquired $\hat{\beta}$ with the output of the corresponding quadratic model created using __lm__ (hint: use the function __I__, see details under help and the sub-section formula operators here: https://www.datacamp.com/community/tutorials/r-formula-tutorial)  
+```{r]}
+m_quad <- lm(mpg ~ wt + I(wt^2), data = mtcars)
+anova(m1, m_quad)
+```
+    i. create a plot that illustrates $Y$ and $\hat{Y}$ (if you are feeling ambitious, also include $\epsilon$ (hint: you can use the function __arrows__))  
+```{r]}
+ggplot(mtcars, aes(x = X[, "wt"])) +
+  geom_point(aes(y = Y)) +
+  geom_line(aes(y = Y_hat)) + 
+  geom_smooth(aes(y = Y_hat2), method = lm, formula = y ~ x + I(x^2)) 
+
+```
+
 ## Exercise 2
 Compare the plotted quadratic fit to the linear fit  
 
 1. which seems better?  
+
+> The quadratic model seems to fit the values better along the entire sample.
+
+
 2. calculate the sum of squared errors, (show the calculation based on $\epsilon$). Which fit has the lower sum?  
+```{r}
+rss_m1 <- sum((Y - Y_hat)^2)
+
+rss_quad <-  sum((Y - Y_hat2)^2)
+
+rss_m1
+rss_quad
+
+```
 3. now make a cubic fit ($y = {\beta}_{3} x^3 + {\beta}_{2} x^2 + {\beta}_{1} x + {\beta}_{0}$) and compare it to the quadratic fit  
+```{r}
+X <- cbind(X, wt3 = mtcars$wt^3)
+tX <- t(X)
+
+beta_estimate_cube <- (solve(tX %*% X) %*% tX %*% Y)
+beta_estimate_cube
+
+Y_hat3 <- beta_estimate_cube[4]*X[, "wt3"] + beta_estimate_cube[3]*X[, "wt2"] + beta_estimate_cube[2]*X[, "wt"] + beta_estimate_cube[1]
+episilon_cube <- Y - Y_hat3
+```
     i. create a plot that illustrates $Y$ and $\hat{Y}$ for both the cubic and the quadratic fits (plot them in the same plot)  
+```{r}
+ggplot(mtcars, aes(x = X[, "wt"])) +
+  geom_point(aes(y = Y)) +
+  geom_smooth(aes(y = Y_hat2), method = lm, formula = y ~ x + I(x^2), color = "blue") +  
+  geom_smooth(aes(y = Y_hat3), method = lm, formula = y ~ x + I(x^2) + I(x^3), color = "red") 
+```
     ii. compare the sum of squared errors  
+```{r}
+rss_cube <- sum((Y - Y_hat3)^2)
+
+rss_quad
+
+rss_cube
+```
     iii. what's the estimated value of the "cubic" (${\beta}_3$) parameter? Comment on this!  
 4. bonus question: which summary statistic is the fitted value (_Intercept_ or ${\beta}_0$ in $y = {\beta}_0$) below identical to?
 ```{r, echo=FALSE}
@@ -217,6 +284,18 @@ inv.logit <- function(x) exp(x) / (1 + exp(x))
 
 1. plot the fitted values for __logistic.model__:  
     i. what is the relation between the __linear.predictors__ and the __fitted_values__ of the __logistic.model__ object?
+
+```{r}
+plot(logistic.model)
+fv <- fitted.values(logistic.model)
+lp <- coef(logistic.model)
+lp
+
+ggplot(mtcar, aes(x = wt))
+
+fv
+
+```
 2. plot the logistic function, you've estimated based on your $\hat{\beta}$, (not just the fitted values). Use an _xlim_ of (0, 7)
     i. what's the interpretation of the estimated $\hat{\beta}_0$ (the _Intercept_)
     ii. calculate the estimated probability that the Pontiac Firebird has automatic transmission, given its weight
