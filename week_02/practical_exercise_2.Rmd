@@ -1,7 +1,7 @@
 ---
 title: "practical_exercise_2, Methods 3, 2021, autumn semester"
-author: '[FILL IN YOUR NAME]'
-date: "[FILL IN THE DATE]"
+author: 'Luke Ring'
+date: "2021-09-27"
 output: pdf_document
 ---
 
@@ -13,6 +13,8 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+pacman::p_load("tidyverse", "lme4")
+
 ```
 
 # Assignment 1: Using mixed effects modelling to model hierarchical data
@@ -22,7 +24,7 @@ In this assignment we will be investigating the _politeness_ dataset of Winter a
 The dataset has been shared on GitHub, so make sure that the csv-file is on your current path. Otherwise you can supply the full path.
 
 ```{r}
-politeness <- read.csv('politeness.csv') ## read in data
+politeness <- read.csv("politeness.csv") ## read in data
 ```
 
 # Exercises and objectives
@@ -43,16 +45,71 @@ REMEMBER: This assignment will be part of your final portfolio
     ii. Which coding of _scenario_, as a factor or not, is more fitting?
 3) Make a plot that includes a subplot for each subject that has _scenario_ on the x-axis and _f0mn_ on the y-axis and where points are colour coded according to _attitude_
     i. Describe the differences between subjects
-    
+```{r}
+politeness$subject <- as.factor(politeness$subject)
+politeness$attitude <- as.factor(politeness$attitude)
+politeness$gender <- as.factor(politeness$gender)
+politeness$scenario <- as.factor(politeness$scenario)
+
+pf1 <- politeness[politeness$subject == "F1", ]
+
+m1 <- lm(f0mn ~ scenario, data = pf1)
+m2 <- lm(f0mn ~ as.factor(scenario), data = pf1)
+summary(m1)
+model.matrix(m1)
+
+summary(m2)
+model.matrix(m2)
+```
+
 ## Exercise 2  - comparison of models
 
 For this part, make sure to have `lme4` installed.  
 You can install it using `install.packages("lme4")` and load it using `library(lme4)`  
 `lmer` is used for multilevel modelling
 
-```{r, eval=FALSE}
-mixed.model <- lmer(formula=..., data=...)
-example.formula <- formula(dep.variable ~ first.level.variable + (1 | second.level.variable))
+```{r}
+
+m3 <- lm(formula = f0mn ~ gender, data = politeness)
+summary(m3)
+
+m4 <- lmer(formula = f0mn ~ gender + (1 | scenario), data = politeness)
+summary(m4)
+
+m5 <- lmer(formula = f0mn ~ gender + (1 | subject), data = politeness)
+summary(m5)
+
+m6 <- lmer(formula = f0mn ~ gender + (1 | subject) + (1 | scenario), data = politeness)
+summary(m6)
+
+# scenario x f0mn y, attitude = color
+ff <- fixef(m6)
+ff
+rf <- ranef(m6)
+rf <- as.data.frame(rf)
+rf
+coef(m6)
+politeness$effect_gender <- 0.0
+politeness[politeness$gender == "F", ]$effect_gender <- ff[1]
+politeness[politeness$gender == "M", ]$effect_gender <- ff[1] + ff[2]
+
+politeness
+
+levels(politeness$subject)
+politeness$intercept_subject <- left_join(politeness, rf, by = c("subject" = "grp"), copy = TRUE, keep = FALSE)$condval
+politeness$intercept_scenario <- left_join(politeness, rf, by = c("scenario" = "grp"), copy = TRUE, keep = FALSE)$condval
+
+politeness$predicted <- politeness$effect_gender + politeness$intercept_subject + politeness$intercept_scenario
+
+
+
+politeness
+politeness %>% ggplot(aes(scenario, f0mn, color = attitude)) +
+    geom_point() +
+    geom_point(aes(y = predicted, shape = "fitted values"), color = "black", size = 2) +
+    scale_shape_manual(name = "model", values = c(18)) +
+    facet_wrap(vars(subject))
+
 ```
 
 1) Build four models and do some comparisons
@@ -83,3 +140,10 @@ example.formula <- formula(dep.variable ~ first.level.variable + (1 | second.lev
   iii. motivate why you would include separate intercepts for subjects and scenarios (if you think they should be included)  
   iv. describe the variance components of the second level (if any)  
   v. include a Quantile-Quantile plot of your chosen model  
+
+
+```{r}
+m7 <- lmer(formula = f0mn ~ gender + attitude + (1 | subject) + (1 | scenario), data = politeness)
+summary(m7)
+
+```
