@@ -14,27 +14,9 @@ output: pdf_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 pacman::p_load("tidyverse", "lme4")
-
 ```
 
 # Assignment 1: Using mixed effects modelling to model hierarchical data
-In this assignment we will be investigating the _politeness_ dataset of Winter and Grawunder (2012) and apply basic methods of multilevel modelling. 
-
-## Dataset
-The dataset has been shared on GitHub, so make sure that the csv-file is on your current path. Otherwise you can supply the full path.
-
-```{r load_data}
-politeness <- read.csv("politeness.csv") ## read in data
-```
-
-# Exercises and objectives
-The objectives of the exercises of this assignment are:  
-1) Learning to recognize hierarchical structures within datasets and describing them  
-2) Creating simple multilevel models and assessing their fitness  
-3) Write up a report about the findings of the study  
-
-REMEMBER: In your report, make sure to include code that can reproduce the answers requested in the exercises below  
-REMEMBER: This assignment will be part of your final portfolio
 
 ## Exercise 1 - describing the dataset and making some initial plots
 
@@ -45,15 +27,13 @@ REMEMBER: This assignment will be part of your final portfolio
     ii. Which coding of _scenario_, as a factor or not, is more fitting?
 3) Make a plot that includes a subplot for each subject that has _scenario_ on the x-axis and _f0mn_ on the y-axis and where points are colour coded according to _attitude_
     i. Describe the differences between subjects
-    > We can see that different subjects have different baseline frequencies as well as different frequency variation between scenarios.
+    
 
 ### Answers
 
 #### **Exercise 1, part 1**
 
 The politeness dataset contains the data obtained from the [study of Korean formal and informal speech](https://doi.org/10.1016/j.wocn.2012.08.006) which investigated the fundamental frequency of male and female participants' speech in a variety of formal and informal scenarios.
-
-
 
 The following table describes the variables in the dataset:
     
@@ -67,9 +47,11 @@ Variable | Description
 `f0mn`|mean fundamental frequency (f0) of the participant's speech
 `hiss_count`|number of times the participants made a noisy breath intake
 
-The gender, scenario and attitude variables should be encoded as factors as they are categorical in this dataset and do not have continuous relationship between variable values. In addition, these variables have non-unique values across participants, and are not ordered.
+The `gender`, `scenario` and `attitude` variables should be encoded as factors as they are categorical in this dataset and do not have continuous relationship between variable values. In addition, these variables have non-unique values across participants, and are not ordered.
 
 ```{r ex1p1}
+# load the data
+politeness <- read.csv("politeness.csv") ## read in data
 # Encode attitude and gender as factors
 # Scenario will be done later
 politeness$attitude <- as.factor(politeness$attitude)
@@ -77,12 +59,8 @@ politeness$gender <- as.factor(politeness$gender)
 
 ```
 
-#### **Exercise 1, part 2**
+
 ```{r ex1p2}
-
-
-
-
 pf1 <- politeness[politeness$subject == "F1", ]
 
 m1 <- lm(f0mn ~ scenario, data = pf1)
@@ -103,6 +81,12 @@ politeness %>% ggplot(aes(scenario, f0mn, color = attitude)) +
     facet_wrap(vars(subject))
 
 ```
+
+
+#### **Exercise 1, part 3**
+
+We can see that different subjects have different baseline frequencies as well as different frequency variation between scenarios.
+
 
 ## Exercise 2  - comparison of models
 
