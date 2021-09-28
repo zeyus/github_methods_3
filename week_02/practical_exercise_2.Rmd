@@ -23,7 +23,7 @@ In this assignment we will be investigating the _politeness_ dataset of Winter a
 ## Dataset
 The dataset has been shared on GitHub, so make sure that the csv-file is on your current path. Otherwise you can supply the full path.
 
-```{r}
+```{r load_data}
 politeness <- read.csv("politeness.csv") ## read in data
 ```
 
@@ -40,27 +40,47 @@ REMEMBER: This assignment will be part of your final portfolio
 
 1) Describe the dataset, such that someone who happened upon this dataset could understand the variables and what they contain  
     i. Also consider whether any of the variables in _politeness_ should be encoded as factors or have the factor encoding removed. Hint: ```?factor```  
-    > The politeness dataset contains the results of ******experiments???***** and contains the following columns
-    > subject: participant id
-    > gender: participant's gender
-    > scenario: the experimental scenario from 1 to 7
-    > attitude: either 'inf' if the particpants are speaking informally or 'pol' if the participants are speaking in a polite manner
-    > total_duration: time in **unit** of interaction
-    > f0mn: mean frequency of the participant's speech
-    > hiss_count: number of times the participants made a hissing sound
-    >
-    > The gender, scenario and attitude variables should be encoded as factors as they are categorical and do not have continuous relationship between variable values.
-
 2) Create a new data frame that just contains the subject _F1_ and run two linear models; one that expresses _f0mn_ as dependent on _scenario_ as an integer; and one that expresses _f0mn_ as dependent on _scenario_ encoded as a factor  
     i. Include the model matrices, $X$ from the General Linear Model, for these two models in your report and describe the different interpretations of _scenario_ that these entail
     ii. Which coding of _scenario_, as a factor or not, is more fitting?
 3) Make a plot that includes a subplot for each subject that has _scenario_ on the x-axis and _f0mn_ on the y-axis and where points are colour coded according to _attitude_
     i. Describe the differences between subjects
     > We can see that different subjects have different baseline frequencies as well as different frequency variation between scenarios.
-```{r}
-# politeness$subject <- as.factor(politeness$subject)
+
+### Answers
+
+#### **Exercise 1, part 1**
+
+The politeness dataset contains the data obtained from the [study of Korean formal and informal speech](https://doi.org/10.1016/j.wocn.2012.08.006) which investigated the fundamental frequency of male and female participants' speech in a variety of formal and informal scenarios.
+
+
+
+The following table describes the variables in the dataset:
+    
+Variable | Description
+---|---
+`subject`|participant ID
+`gender`|participant's gender
+`scenario`|the experimental scenario from 1 to 7 such as "asking a favour"
+`attitude`|either 'inf' for informal stimuli or 'pol' for formal stimuli
+`total_duration`|duration of participant's response in seconds
+`f0mn`|mean fundamental frequency (f0) of the participant's speech
+`hiss_count`|number of times the participants made a noisy breath intake
+
+The gender, scenario and attitude variables should be encoded as factors as they are categorical in this dataset and do not have continuous relationship between variable values. In addition, these variables have non-unique values across participants, and are not ordered.
+
+```{r ex1p1}
+# Encode attitude and gender as factors
+# Scenario will be done later
 politeness$attitude <- as.factor(politeness$attitude)
 politeness$gender <- as.factor(politeness$gender)
+
+```
+
+#### **Exercise 1, part 2**
+```{r ex1p2}
+
+
 
 
 pf1 <- politeness[politeness$subject == "F1", ]
@@ -68,7 +88,7 @@ pf1 <- politeness[politeness$subject == "F1", ]
 m1 <- lm(f0mn ~ scenario, data = pf1)
 mm1 <- model.matrix(m1)
 m2 <- lm(f0mn ~ as.factor(scenario), data = pf1)
-mm1 <- model.matrix(m2)
+mm2 <- model.matrix(m2)
 summary(m1)
 mm1
 summary(m2)
