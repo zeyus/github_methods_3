@@ -40,26 +40,48 @@ REMEMBER: This assignment will be part of your final portfolio
 
 1) Describe the dataset, such that someone who happened upon this dataset could understand the variables and what they contain  
     i. Also consider whether any of the variables in _politeness_ should be encoded as factors or have the factor encoding removed. Hint: ```?factor```  
+    > The politeness dataset contains the results of ******experiments???***** and contains the following columns
+    > subject: participant id
+    > gender: participant's gender
+    > scenario: the experimental scenario from 1 to 7
+    > attitude: either 'inf' if the particpants are speaking informally or 'pol' if the participants are speaking in a polite manner
+    > total_duration: time in **unit** of interaction
+    > f0mn: mean frequency of the participant's speech
+    > hiss_count: number of times the participants made a hissing sound
+    >
+    > The gender, scenario and attitude variables should be encoded as factors as they are categorical and do not have continuous relationship between variable values.
+
 2) Create a new data frame that just contains the subject _F1_ and run two linear models; one that expresses _f0mn_ as dependent on _scenario_ as an integer; and one that expresses _f0mn_ as dependent on _scenario_ encoded as a factor  
     i. Include the model matrices, $X$ from the General Linear Model, for these two models in your report and describe the different interpretations of _scenario_ that these entail
     ii. Which coding of _scenario_, as a factor or not, is more fitting?
 3) Make a plot that includes a subplot for each subject that has _scenario_ on the x-axis and _f0mn_ on the y-axis and where points are colour coded according to _attitude_
     i. Describe the differences between subjects
+    > We can see that different subjects have different baseline frequencies as well as different frequency variation between scenarios.
 ```{r}
-politeness$subject <- as.factor(politeness$subject)
+# politeness$subject <- as.factor(politeness$subject)
 politeness$attitude <- as.factor(politeness$attitude)
 politeness$gender <- as.factor(politeness$gender)
-politeness$scenario <- as.factor(politeness$scenario)
+
 
 pf1 <- politeness[politeness$subject == "F1", ]
 
 m1 <- lm(f0mn ~ scenario, data = pf1)
+mm1 <- model.matrix(m1)
 m2 <- lm(f0mn ~ as.factor(scenario), data = pf1)
+mm1 <- model.matrix(m2)
 summary(m1)
-model.matrix(m1)
-
+mm1
 summary(m2)
-model.matrix(m2)
+mm2
+
+# we really want this as a factor
+politeness$scenario <- as.factor(politeness$scenario)
+
+
+politeness %>% ggplot(aes(scenario, f0mn, color = attitude)) +
+    geom_point() +
+    facet_wrap(vars(subject))
+
 ```
 
 ## Exercise 2  - comparison of models
@@ -72,6 +94,7 @@ You can install it using `install.packages("lme4")` and load it using `library(l
 
 m3 <- lm(formula = f0mn ~ gender, data = politeness)
 summary(m3)
+plot(m3)
 
 m4 <- lmer(formula = f0mn ~ gender + (1 | scenario), data = politeness)
 summary(m4)
@@ -81,6 +104,11 @@ summary(m5)
 
 m6 <- lmer(formula = f0mn ~ gender + (1 | subject) + (1 | scenario), data = politeness)
 summary(m6)
+
+# AIC(m3, m4, m5, m6) # m6 lower
+
+anova(m4, m5, m6)
+
 
 # scenario x f0mn y, attitude = color
 ff <- fixef(m6)
@@ -93,7 +121,10 @@ politeness$effect_gender <- 0.0
 politeness[politeness$gender == "F", ]$effect_gender <- ff[1]
 politeness[politeness$gender == "M", ]$effect_gender <- ff[1] + ff[2]
 
-politeness
+deviance(m3)
+deviance(m4, REML = FALSE)
+deviance(m5, REML = FALSE)
+deviance(m6, REML = FALSE)
 
 levels(politeness$subject)
 politeness$intercept_subject <- left_join(politeness, rf, by = c("subject" = "grp"), copy = TRUE, keep = FALSE)$condval
@@ -103,13 +134,23 @@ politeness$predicted <- politeness$effect_gender + politeness$intercept_subject 
 
 
 
-politeness
+
 politeness %>% ggplot(aes(scenario, f0mn, color = attitude)) +
     geom_point() +
     geom_point(aes(y = predicted, shape = "fitted values"), color = "black", size = 2) +
     scale_shape_manual(name = "model", values = c(18)) +
     facet_wrap(vars(subject))
 
+politeness_aggregated <- politeness[!is.na(politeness$f0mn), ] %>% group_by(subject) %>% summarize(subject = subject[1], gender = gender[1], f0mn = mean(f0mn))
+politeness_aggregated
+
+m7 <- lm(f0mn ~ gender, data = politeness_aggregated)
+par(mfrow=c(1,2))
+qqnorm(fitted.values(m7))
+qqline(fitted.values(m7))
+qqnorm(fitted.values(m2))
+qqline(fitted.values(m2))
+par(mfrow=c(1,1))
 ```
 
 1) Build four models and do some comparisons
@@ -143,7 +184,21 @@ politeness %>% ggplot(aes(scenario, f0mn, color = attitude)) +
 
 
 ```{r}
-m7 <- lmer(formula = f0mn ~ gender + attitude + (1 | subject) + (1 | scenario), data = politeness)
-summary(m7)
+m8 <- lmer(formula = f0mn ~ gender + attitude + (1 | subject) + (1 | scenario), data = politeness)
+summary(m8)
+fitted.values(m8)
+par(mfrow=c(1,2))
+qqnorm(fitted.values(m8))
+qqline(fitted.values(m8), col = "red")
+
+qqnorm(politeness$f0mn)
+qqline(politeness$f0mn, col = "red")
+
+plot(m8)
+m9 <- lmer(formula = f0mn ~ gender + attitude + gender:attitude + (1 | subject) + (1 | scenario), data = politeness)
+summary(m9)
+
+anova(m6, m8, m9)
+
 
 ```
