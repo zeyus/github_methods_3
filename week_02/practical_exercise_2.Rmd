@@ -13,7 +13,7 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-pacman::p_load("tidyverse", "lme4", "piecewiseSEM")
+pacman::p_load("tidyverse", "lme4", "lmerTest", "piecewiseSEM")
 ```
 
 # Assignment 1: Using mixed effects modelling to model hierarchical data
@@ -274,6 +274,7 @@ This dataset consists of the basic demographic information of 16 Korean particip
 
 ```{r ex3p3}
 summary(m8)
+anova(m8)
 plot(m8)
 ```
 
