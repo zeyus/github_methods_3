@@ -13,7 +13,7 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-pacman::p_load("tidyverse", "lme4")
+pacman::p_load("tidyverse", "lme4", "piecewiseSEM")
 ```
 
 # Assignment 1: Using mixed effects modelling to model hierarchical data
@@ -51,111 +51,68 @@ The `gender`, `scenario` and `attitude` variables should be encoded as factors a
 
 ```{r ex1p1}
 # load the data
-politeness <- read.csv("politeness.csv") ## read in data
+politeness <- read.csv("politeness.csv")
 # Encode attitude and gender as factors
-# Scenario will be done later
 politeness$attitude <- as.factor(politeness$attitude)
 politeness$gender <- as.factor(politeness$gender)
+# we really want scenario as a factor as well
+politeness$scenario <- as.factor(politeness$scenario)
 
 ```
+
+
+#### **Exercise 1, part 2**
 
 
 ```{r ex1p2}
+# Create a subset dataframe for subject F1 only
 pf1 <- politeness[politeness$subject == "F1", ]
 
-m1 <- lm(f0mn ~ scenario, data = pf1)
+# make model predicting f0mn by scenario (integer)
+m1 <- lm(f0mn ~ as.integer(scenario), data = pf1)
+# get model matrix
 mm1 <- model.matrix(m1)
-m2 <- lm(f0mn ~ as.factor(scenario), data = pf1)
+# make model predicting f0mn by scenario (factor)
+m2 <- lm(f0mn ~ scenario, data = pf1)
+# get model matrix
 mm2 <- model.matrix(m2)
-summary(m1)
-mm1
-summary(m2)
-mm2
-
-# we really want this as a factor
-politeness$scenario <- as.factor(politeness$scenario)
-
-
-politeness %>% ggplot(aes(scenario, f0mn, color = attitude)) +
-    geom_point() +
-    facet_wrap(vars(subject))
 
 ```
+
+Model using scenario as integer
+
+```{r ex1p2mm_int}
+summary(m1)
+mm1
+```
+
+Model using scenario as factor
+
+```{r ex1p2mm_fact}
+summary(m2)
+mm2
+```
+
+The above output shows the difference in model matrices between scenario encoded as an integer and factor. The integer version treats scenario as a continous variable, whereas the factorised version creates a regression line per scenario.
+
+For this dataset, scenario should be a factor, the scenarios are not a continuous variable and depending on the prescribed scenario, the participants may have a different f0 and this wont consistently increase or decrease across scenarios.
 
 
 #### **Exercise 1, part 3**
 
-We can see that different subjects have different baseline frequencies as well as different frequency variation between scenarios.
+```{r ex1p3}
+
+politeness %>% ggplot(aes(scenario, f0mn, color = attitude)) +
+    geom_point() +
+    facet_wrap(vars(subject))
+
+```
+
+We can see that different subjects have different baseline frequencies as well as different within-subject variation between scenarios. Just based on visual examination of the data, it does seem like there is some consistency of the relative f0 changes per scenario across participants.
 
 
 ## Exercise 2  - comparison of models
 
-For this part, make sure to have `lme4` installed.  
-You can install it using `install.packages("lme4")` and load it using `library(lme4)`  
-`lmer` is used for multilevel modelling
-
-```{r}
-
-m3 <- lm(formula = f0mn ~ gender, data = politeness)
-summary(m3)
-plot(m3)
-
-m4 <- lmer(formula = f0mn ~ gender + (1 | scenario), data = politeness)
-summary(m4)
-
-m5 <- lmer(formula = f0mn ~ gender + (1 | subject), data = politeness)
-summary(m5)
-
-m6 <- lmer(formula = f0mn ~ gender + (1 | subject) + (1 | scenario), data = politeness)
-summary(m6)
-
-# AIC(m3, m4, m5, m6) # m6 lower
-
-anova(m4, m5, m6)
-
-
-# scenario x f0mn y, attitude = color
-ff <- fixef(m6)
-ff
-rf <- ranef(m6)
-rf <- as.data.frame(rf)
-rf
-coef(m6)
-politeness$effect_gender <- 0.0
-politeness[politeness$gender == "F", ]$effect_gender <- ff[1]
-politeness[politeness$gender == "M", ]$effect_gender <- ff[1] + ff[2]
-
-deviance(m3)
-deviance(m4, REML = FALSE)
-deviance(m5, REML = FALSE)
-deviance(m6, REML = FALSE)
-
-levels(politeness$subject)
-politeness$intercept_subject <- left_join(politeness, rf, by = c("subject" = "grp"), copy = TRUE, keep = FALSE)$condval
-politeness$intercept_scenario <- left_join(politeness, rf, by = c("scenario" = "grp"), copy = TRUE, keep = FALSE)$condval
-
-politeness$predicted <- politeness$effect_gender + politeness$intercept_subject + politeness$intercept_scenario
-
-
-
-
-politeness %>% ggplot(aes(scenario, f0mn, color = attitude)) +
-    geom_point() +
-    geom_point(aes(y = predicted, shape = "fitted values"), color = "black", size = 2) +
-    scale_shape_manual(name = "model", values = c(18)) +
-    facet_wrap(vars(subject))
-
-politeness_aggregated <- politeness[!is.na(politeness$f0mn), ] %>% group_by(subject) %>% summarize(subject = subject[1], gender = gender[1], f0mn = mean(f0mn))
-politeness_aggregated
-
-m7 <- lm(f0mn ~ gender, data = politeness_aggregated)
-par(mfrow=c(1,2))
-qqnorm(fitted.values(m7))
-qqline(fitted.values(m7))
-qqnorm(fitted.values(m2))
-qqline(fitted.values(m2))
-par(mfrow=c(1,1))
-```
 
 1) Build four models and do some comparisons
     i. a single level model that models _f0mn_ as dependent on _gender_
@@ -172,6 +129,79 @@ par(mfrow=c(1,1))
 3) Plotting the two-intercepts model
     i. Create a plot for each subject, (similar to part 3 in Exercise 1), this time also indicating the fitted value for each of the subjects for each for the scenarios (hint use `fixef` to get the "grand effects" for each gender and `ranef` to get the subject- and scenario-specific effects)
     
+#### **Exercise 2, part 1**
+
+```{r ex2p1}
+# single level
+m3 <- lm(formula = f0mn ~ gender, data = politeness)
+# scenario intercept
+m4 <- lmer(formula = f0mn ~ gender + (1 | scenario), data = politeness)
+# subject intercept
+m5 <- lmer(formula = f0mn ~ gender + (1 | subject), data = politeness)
+# subject and scenario intercept
+m6 <- lmer(formula = f0mn ~ gender +
+            (1 | subject) + (1 | scenario), data = politeness)
+AIC(m3)
+deviance(m3)
+
+anova(m4, m5, m6)
+piecewiseSEM::rsquared(c(m4, m5, m6))
+```
+
+Comparing the above models, we see that the model that has the lowest AIC and deviance is m6, which uses random intercepts for subject and scenario. The single level model performs the worst in both cases, and this makes sense as we do not expect all participants to have the same f0 as their voices have naturally occuring differences (not just based on gender), as well as scenario based differences, neither of which are taken into account from the single level model.
+
+Of the three multi-level models model m6, using random intercepts for subject and scenario has the most explained variance with for the entire model $R^2 \approx 0.81$ or 81%.
+
+#### **Exercise 2, part 2**
+
+
+#### **Exercise 2, part 3**
+```{r}
+
+
+
+# scenario x f0mn y, attitude = color
+ff <- fixef(m6)
+
+rf <- ranef(m6)
+rf <- as.data.frame(rf)
+
+politeness$effect_gender <- 0.0
+politeness[politeness$gender == "F", ]$effect_gender <- ff[1]
+politeness[politeness$gender == "M", ]$effect_gender <- ff[1] + ff[2]
+
+
+politeness$intercept_subject <- left_join(politeness, rf, by = c("subject" = "grp"), copy = TRUE, keep = FALSE)$condval
+politeness$intercept_scenario <- left_join(politeness, rf, by = c("scenario" = "grp"), copy = TRUE, keep = FALSE)$condval
+
+politeness$predicted <- politeness$effect_gender + politeness$intercept_subject + politeness$intercept_scenario
+
+
+
+
+politeness %>% ggplot(aes(scenario, f0mn, color = attitude)) +
+    geom_point() +
+    geom_point(aes(y = predicted, shape = "fitted values"), color = "black", size = 2) +
+    scale_shape_manual(name = "model", values = c(18)) +
+    facet_wrap(vars(subject))
+
+deviance(m3)
+deviance(m4, REML = FALSE)
+deviance(m5, REML = FALSE)
+deviance(m6, REML = FALSE)
+
+
+politeness_aggregated <- politeness[!is.na(politeness$f0mn), ] %>% group_by(subject) %>% summarize(subject = subject[1], gender = gender[1], f0mn = mean(f0mn))
+politeness_aggregated
+
+m7 <- lm(f0mn ~ gender, data = politeness_aggregated)
+par(mfrow=c(1,2))
+qqnorm(fitted.values(m7))
+qqline(fitted.values(m7))
+qqnorm(fitted.values(m2))
+qqline(fitted.values(m2))
+par(mfrow=c(1,1))
+```
 ## Exercise 3 - now with attitude
 
 1) Carry on with the model with the two unique intercepts fitted (_scenario_ and _subject_).
