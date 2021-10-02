@@ -1,8 +1,14 @@
 ---
 title: "practical_exercise_3, Methods 3, 2021, autumn semester"
-author: '[FILL IN YOUR NAME]'
-date: "[FILL IN THE DATE]"
-output: html_document
+author: 'Luke Ring'
+date: "2021-10-02"
+output:
+  html_document:
+    theme: darkly
+    highlight: breezedark
+    css: knit_style_luke.css
+    code_folding: show
+    toc: true
 ---
 
 <style type="text/css">
@@ -12,7 +18,8 @@ output: html_document
 </style>
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.width = 10, fig.height = 10, echo = TRUE)
+pacman::p_load("tidyverse", "lme4", "lmerTest", "piecewiseSEM")
 ```
 
 # Exercises and objectives
@@ -37,6 +44,99 @@ The data is associated with Experiment 2 of the article at the following DOI htt
     iv. on top of those plots, add the estimated functions (on the _target.contrast_ range from 0-1) for each subject based on partial pooling model (use `glmer` from the package `lme4`) where unique intercepts and slopes for _target.contrast_ are modelled for each _subject_  
     v. in your own words, describe how the partial pooling model allows for a better fit for each subject  
 
+### Answers
+
+#### **Exercise 1, part 1**
+
+```{r ex1p1i}
+# get list of all CSV files
+temp <- list.files(path = "./experiment_2/",
+    pattern = "*.csv", full.names = TRUE)
+
+# load into single data frame
+samples <- map_df(temp, read_csv, trim_ws = TRUE, na = c("", "NA"),
+    col_types = cols(
+        trial.type = col_factor(),
+        pas = col_integer(),
+        trial = col_factor(),
+        jitter.x = col_double(),
+        jitter.y = col_double(),
+        odd.digit = col_integer(),
+        target.contrast = col_double(),
+        target.frames = col_double(),
+        cue = col_factor(),
+        task = col_factor(),
+        target.type = col_factor(),
+        rt.subj = col_double(),
+        rt.obj = col_double(),
+        even.digit = col_integer(),
+        seed = col_double(),
+        obj.resp = col_factor(),
+        subject = col_character()
+    ))
+
+rm(temp)
+# peek data
+head(samples)
+# total number of samples
+nrow(samples)
+```
+
+
+
+#### **Exercise 1, part 2**
+
+```{r ex1p2i}
+# Add column to indicate if participant response was correct
+samples <- mutate(samples,
+    correct = as.logical(
+        ifelse(substr(target.type, 1, 1) == obj.resp, 1, 0)
+    )
+)
+```
+
+```{r ex1p1iii}
+samples_staircase <- samples %>% filter(trial.type == "staircase")
+
+m1 <- glm(correct ~ target.contrast,
+    data = samples_staircase,
+    family = binomial(link = "logit"))
+
+summary(m1)
+samples_staircase %>%
+    ggplot(aes(target.contrast, as.integer(correct), color = correct)) +
+    geom_point() +
+    geom_line(aes(target.contrast, fitted(m1),
+        linetype = "fitted values"), inherit.aes = FALSE) +
+    scale_linetype_manual(name = "single-level model", values = c("dashed")) +
+    facet_wrap(~subject) +
+    labs(title = "Correct answers by target contrast per participant",
+        subtitle = "With single-level model fitted values",
+        color = "subject correct") +
+    ylab("Correct (probability)") +
+    xlab("target contrast")
+```
+```{r ex1p1iv}
+m2 <- glmer(correct ~ target.contrast + (1 + target.contrast | subject),
+    data = samples_staircase,
+    family = binomial(link = "logit"))
+summary(m2)
+
+samples_staircase %>%
+    ggplot(aes(target.contrast, as.integer(correct), color = correct)) +
+    geom_point() +
+    geom_line(aes(target.contrast, fitted(m2),
+        linetype = "fitted values"), inherit.aes = FALSE) +
+    scale_linetype_manual(name = "multi-level model", values = c("dashed")) +
+    facet_wrap(~subject) +
+    labs(title = "Correct answers by target contrast per participant",
+        subtitle = "With multi-level model fitted values",
+        color = "subject correct") +
+    ylab("Correct (probability)") +
+    xlab("target contrast")
+```
+
+
 ## Exercise 2
 
 Now we __only__ look at the _experiment_ trials (_trial.type_)  
@@ -58,7 +158,7 @@ Now we __only__ look at the _experiment_ trials (_trial.type_)
 
 ```{r}
 ## you can start from this if you want to, but you can also make your own from scratch
-data.count <- data.frame(count = numeric(), 
+data.count <- data.frame(count = numeric(),
                          pas = numeric(), ## remember to make this into a factor afterwards
                          task = numeric(), ## and this too
                          subject = numeric()) ## and this too
