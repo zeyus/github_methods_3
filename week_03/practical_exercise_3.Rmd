@@ -152,6 +152,58 @@ Now we __only__ look at the _experiment_ trials (_trial.type_)
     ii. create a model by adding random intercepts (without modelling slopes) that results in a singular fit - then use `print(VarCorr(<your.model>), comp='Variance')` to inspect the variance vector - explain why the fit is singular (Hint: read the first paragraph under details in the help for `isSingular`)
     iii. in your own words - how could you explain why your model would result in a singular fit?  
     
+### Answers
+
+#### **Exercise 2, part 1**
+
+We will use subjects 002, 009, 014 and 015.
+
+```{r ex2p1}
+samples_experiment <- samples %>% filter(trial.type == "experiment")
+
+# make 2x2 plot grid
+par(mfrow = c(2, 2))
+# plot qq plots for objective response time of subjects:
+# 002
+qqnorm(samples_experiment[samples_experiment$subject == "002", ]$rt.obj)
+qqline(samples_experiment[samples_experiment$subject == "002", ]$rt.obj,
+    col = "red")
+# 009
+qqnorm(samples_experiment[samples_experiment$subject == "009", ]$rt.obj)
+qqline(samples_experiment[samples_experiment$subject == "009", ]$rt.obj,
+    col = "red")
+# 014
+qqnorm(samples_experiment[samples_experiment$subject == "014", ]$rt.obj)
+qqline(samples_experiment[samples_experiment$subject == "014", ]$rt.obj,
+    col = "red")
+# 015
+qqnorm(samples_experiment[samples_experiment$subject == "015", ]$rt.obj)
+qqline(samples_experiment[samples_experiment$subject == "015", ]$rt.obj,
+    col = "red")
+
+# plot qq plots for log transformed objective response time of subjects:
+# 002
+qqnorm(log(samples_experiment[samples_experiment$subject == "002", ]$rt.obj))
+qqline(log(samples_experiment[samples_experiment$subject == "002", ]$rt.obj),
+    col = "red")
+# 009
+qqnorm(log(samples_experiment[samples_experiment$subject == "009", ]$rt.obj))
+qqline(log(samples_experiment[samples_experiment$subject == "009", ]$rt.obj),
+    col = "red")
+# 014
+qqnorm(log(samples_experiment[samples_experiment$subject == "014", ]$rt.obj))
+qqline(log(samples_experiment[samples_experiment$subject == "014", ]$rt.obj),
+    col = "red")
+# 015
+qqnorm(log(samples_experiment[samples_experiment$subject == "015", ]$rt.obj))
+qqline(log(samples_experiment[samples_experiment$subject == "015", ]$rt.obj),
+    col = "red")
+# reset plot grid
+par(mfrow = c(1, 1))
+
+```
+
+
 ## Exercise 3
 
 1) Initialise a new data frame, `data.count`. _count_ should indicate the number of times they categorized their experience as _pas_ 1-4 for each _task_. I.e. the data frame would have for subject 1: for task:singles, pas1 was used # times, pas2 was used # times, pas3 was used # times and pas4 was used # times. You would then do the same for task:pairs and task:quadruplet  
