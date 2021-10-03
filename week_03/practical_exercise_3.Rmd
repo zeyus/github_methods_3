@@ -19,7 +19,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(fig.width = 10, fig.height = 10, echo = TRUE)
-pacman::p_load("tidyverse", "lme4", "lmerTest", "piecewiseSEM")
+pacman::p_load("tidyverse", "lme4", "lmerTest", "piecewiseSEM", "dfoptim")
 ```
 
 # Exercises and objectives
@@ -255,13 +255,14 @@ print(VarCorr(m5), comp = "Variance")
 #### **Exercise 3, part 1**
 
 ```{r ex3p1}
-data.count <- samples %>% select(subject, pas, task) %>%
+data.count <- samples %>% select(subject, pas, task, correct) %>%
     group_by(subject, task, pas) %>%
     summarize(
         subject = subject[1],
         task = task[1],
         pas = pas[1],
         count = n(),
+        accuracy = sum(correct) / n(),
         .groups = "drop")
 head(data.count)
 ```
@@ -269,11 +270,76 @@ head(data.count)
 #### **Exercise 3, part 2**
 
 ```{r ex3p2}
+m6 <- glmer(count ~
+    pas + task + pas:task +
+    (1 + pas | subject),
+    data = data.count,
+    family = poisson,
+    control = glmerControl(optimizer = "bobyqa"))
+summary(m6)
+
+# get only specified subjects
+data.count_subset <- data.count %>%
+    filter(
+        subject == "002" |
+        subject == "009" |
+        subject == "014" |
+        subject == "015")
+
+# predict using model for only selected subjects
+m6_fitted <- predict(m6, newdata = data.count_subset)
+
+# plot. is this right? the predictions seem way off...
+data.count_subset %>% ggplot(aes(task, count, color = task)) +
+    geom_point() +
+    geom_point(aes(x = task, y = m6_fitted), shape = 18, size = 3) +
+    facet_wrap(subject~pas)
 
 ```
 
 #### **Exercise 3, part 3**
 
 ```{r ex3p3}
+m7 <- glmer(correct ~ task +
+    (1 | subject),
+    data = samples,
+    family = binomial(link = "logit"))
+summary(m7)
+# seems task only explains a tiny amount of performance
+piecewiseSEM::rsquared(m7)
+
+m8 <- glmer(correct ~ task + pas +
+    (1 | subject),
+    data = samples,
+    family = binomial(link = "logit"))
+summary(m8)
+# better
+piecewiseSEM::rsquared(m8)
+
+
+m9 <- glmer(correct ~ pas +
+    (1 | subject),
+    data = samples,
+    family = binomial(link = "logit"))
+summary(m9)
+# task makes negligible diff
+piecewiseSEM::rsquared(m9)
+
+m10 <- glm(correct ~ pas + task +
+    pas:task,
+    data = samples,
+    family = binomial(link = "logit"))
+summary(m10)
+# task makes negligible diff
+piecewiseSEM::rsquared(m10)
+
+
+m11 <- glmer(correct ~ pas + task +
+    pas:task + (1 | subject),
+    data = samples,
+    family = binomial(link = "logit"))
+summary(m11)
+# task makes negligible diff
+piecewiseSEM::rsquared(m11)
 
 ```
