@@ -72,7 +72,7 @@ samples <- map_df(temp, read_csv, trim_ws = TRUE, na = c("", "NA"),
         even.digit = col_integer(),
         seed = col_double(),
         obj.resp = col_factor(),
-        subject = col_character()
+        subject = col_factor()
     ))
 
 rm(temp)
@@ -207,7 +207,7 @@ par(mfrow = c(1, 1))
 #### **Exercise 2, part 2**
 
 ```{r ex2p2}
-# prob need more here ... adding rask as random interecept
+# prob need more here ... adding task as random interecept
 # results in singular fit, and it breaks
 # when adding contrast as random intercept (though i'd)
 # argue that it's relevant
@@ -220,21 +220,20 @@ summary(m3)
 
 #### **Exercise 2, part 3**
 ```{r ex2p3}
+m4 <- lmer(rt.obj ~ task + pas:task + (1 | subject),
+    REML = FALSE, data = samples_experiment)
+summary(m4)
 
+m5 <- lmer(rt.obj ~ task + pas:task + (1 | subject) + (1 | task),
+    REML = FALSE, data = samples_experiment)
+summary(m5)
+
+print(VarCorr(m5), comp = "Variance")
 ```
 
 ## Exercise 3
 
 1) Initialise a new data frame, `data.count`. _count_ should indicate the number of times they categorized their experience as _pas_ 1-4 for each _task_. I.e. the data frame would have for subject 1: for task:singles, pas1 was used # times, pas2 was used # times, pas3 was used # times and pas4 was used # times. You would then do the same for task:pairs and task:quadruplet  
-
-```{r}
-## you can start from this if you want to, but you can also make your own from scratch
-data.count <- data.frame(count = numeric(),
-                         pas = numeric(), ## remember to make this into a factor afterwards
-                         task = numeric(), ## and this too
-                         subject = numeric()) ## and this too
-```
-
 2) Now fit a multilevel model that models a unique "slope" for _pas_ for each _subject_ with the interaction between _pas_ and _task_ and their main effects being modelled  
     i. which family should be used?  
     ii. why is a slope for _pas_ not really being modelled?  
@@ -256,7 +255,15 @@ data.count <- data.frame(count = numeric(),
 #### **Exercise 3, part 1**
 
 ```{r ex3p1}
-
+data.count <- samples %>% select(subject, pas, task) %>%
+    group_by(subject, task, pas) %>%
+    summarize(
+        subject = subject[1],
+        task = task[1],
+        pas = pas[1],
+        count = n(),
+        .groups = "drop")
+head(data.count)
 ```
 
 #### **Exercise 3, part 2**
