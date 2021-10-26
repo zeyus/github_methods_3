@@ -161,6 +161,7 @@ We then took subject 024 and took the number of correct divided by trials to ret
 Exercise 5.3ii 
 The choosen model, m6, is a binomial model in which the variable _correct_ is predicted by _target.frames_, _PAS_ and their interaction. 
 How does PAS affect accuracy together with target duration? 
+PAS together with target duration, the accuracy 
 comment on the behaviour at targetframes=0, is that behaviour reasonable? 
 
 ### Exercise 5, part 3
