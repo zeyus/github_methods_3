@@ -15,7 +15,7 @@ output: pdf_document
 
 knitr::opts_chunk$set(echo = TRUE)
 
-pacman::p_load("tidyverse", "lme4", "lmerTest", "piecewiseSEM", "dfoptim")
+pacman::p_load("tidyverse", "lme4", "lmerTest", "piecewiseSEM", "dfoptim", "multcomp")
 
 ```
 
@@ -208,24 +208,35 @@ We want to test a hypothesis for each of the three neighbouring differences in P
 ### Exercise 6, part 1
 
 ```{r}
-m7 <- glmer(correct ~ pas * target.frames + (target.frames | subject), data = exp1, family = binomial(link = "logit")
+m7 <- glmer(correct ~ pas * target.frames + (target.frames | subject), data = exp1, family = binomial(link = "logit"), control = glmerControl(optimizer = "bobyqa"))
 summary(m7)
 ```
 ### Exercise 6, part 2
-
+```{r}
+glht(m7)
+```
 ### Snippet for 6.2.i
 ```{r, eval=FALSE}
 ## testing whether PAS 2 is different from PAS 1
-contrast.vector <- matrix(c(0, 0, 0, 0, 0, 1, 0, 0), nrow=1)
-gh <- glht(pas.intact.tf.ranslopeint.with.corr, contrast.vector)
+contrast.vector <- matrix(c(0, 0, 0, 0, 0, 1, 0, 0), nrow = 1)
+gh <- glht(m7, contrast.vector)
 print(summary(gh))
 ## as another example, we could also test whether there is a difference in
 ## intercepts between PAS 2 and PAS 3
-contrast.vector <- matrix(c(0, -1, 1, 0, 0, 0, 0, 0), nrow=1)
-gh <- glht(pas.intact.tf.ranslopeint.with.corr, contrast.vector)
+contrast.vector <- matrix(c(0, -1, 1, 0, 0, 0, 0, 0), nrow = 1)
+gh <- glht(m7, contrast.vector)
 print(summary(gh))
+
+
 ```
 ### Exercise 6, part 3
+
+```{r, eval=FALSE}
+## PAS 4 and 3 (i think??)
+contrast.vector <- matrix(c(-1, 1, 0, 0, 0, 0, 0, 0), nrow = 1)
+gh <- glht(m7, contrast.vector)
+print(summary(gh))
+```
 
 # EXERCISE 7 - Estimate psychometric functions for the Perceptual Awareness Scale and evaluate them  
 
