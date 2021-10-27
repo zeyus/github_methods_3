@@ -374,7 +374,10 @@ subj7xy[subj7xy$pas == "4", ]$yhat <- p4fit
 
 ggplot(aes(x = x, y = as.numeric(y), color = pas), data = subj7xy) +
     geom_jitter(width = 0.25, height = 0.05) +
-    geom_smooth(aes(y = yhat))
+    geom_line(aes(y = yhat)) +
+    geom_point(aes(y = yhat), shape = 3, size = 3) +
+    geom_text(aes(y = yhat, label = round(yhat, 2)),
+        color = "black", nudge_x = -0.1, nudge_y = 0.005)
 
 
 ```
