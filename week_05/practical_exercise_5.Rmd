@@ -1,8 +1,8 @@
 ---
 title: "practical_exercise_5, Methods 3, 2021, autumn semester"
-author: '[FILL IN YOUR NAME]'
-date: "[FILL IN THE DATE]"
-output: pdf_document
+author: 'study  group 8'
+date: "2021-10-27"
+output: html_document
 ---
 
 <style type="text/css">
@@ -258,26 +258,20 @@ It has four parameters: _a_, which can be interpreted as the minimum accuracy le
   
 We can define a function of a residual sum of squares as below
 
-```{r, eval=FALSE}
+```{r}
 
 sigfit <- function(a, b, c, d, x) {
     a + (b-a)/(1+exp((c-x)/d))
 }
 
 RSS <- function(dataset, par) {
-    ## "dataset" should be a data.frame containing the variables x (target.frames)
-    ## and y (correct)
-    
-    ## "par" are our four parameters (a numeric vector) 
-    ## par[1]=a, par[2]=b, par[3]=c, par[4]=d
-    ####      0     1           1         1
     x <- dataset$x
     y <- dataset$y
-    # ŷ = b0 + b1*x
     y.hat <- sigfit(par[1], par[2], par[3], par[4], x)
     RSS <- sum((y - y.hat)^2)
     return(RSS)
 }
+
 ```
 
 1) Now, we will fit the sigmoid for the four PAS ratings for Subject 7
@@ -379,9 +373,101 @@ ggplot(aes(x = x, y = as.numeric(y), color = pas), data = subj7xy) +
     geom_text(aes(y = yhat, label = round(yhat, 2)),
         color = "black", nudge_x = -0.1, nudge_y = 0.005)
 
+s7m7fit <- predict(m7, newdata = subj7, type = "response")
+
+ggplot(aes(x = target.frames, y = as.numeric(correct), color = pas), data = subj7) +
+    geom_jitter(width = 0.25, height = 0.05) +
+    geom_line(aes(y = s7m7fit))
 
 ```
 
 
 
 ### Exercise 7, part 2
+
+```{r}
+
+
+
+sigmodel_pas <- function(pas_lev, subjx) {
+    dat <- data.frame(x = subjx[subjx$pas == pas_lev, ]$target.frames, y = subjx[subjx$pas == pas_lev, ]$correct)
+    subjxpx_opt <- optim(
+        par = c(0, 1, 1, 1),
+        fn = RSS,
+        data = dat,
+        method = "L-BFGS-B",
+        lower = c(0, 0, -Inf, -Inf),
+        upper = c(1, 1, Inf, Inf)
+    )
+    # pxfit <- sigfit(
+    #         a = subjxpx_opt$par[1],
+    #         b = subjxpx_opt$par[2],
+    #         c = subjxpx_opt$par[3],
+    #         d = subjxpx_opt$par[4],
+    #         x = dat$x)
+
+    list(
+        subjxpx_opt$par[1],
+        subjxpx_opt$par[2],
+        subjxpx_opt$par[3],
+        subjxpx_opt$par[4])
+
+}
+
+sigmodel <- function(x, dat, paslevs) {
+    subjx <- dat[dat$subject == x, ]
+    sapply(paslevs, sigmodel_pas, subjx = subjx, USE.NAMES = FALSE, simplify = FALSE)
+
+}
+
+fit_sigmodel <- function(pas, dat, params) {
+    sigfit(
+            a = params[, pas][1],
+            b = params[, pas][2],
+            c = params[, pas][3],
+            d = params[, pas][4],
+            x = dat[dat$pas == pas, ]$target.frames)
+}
+
+pars <- c("a", "b", "c", "d")
+subjects <- levels(exp1$subject)
+paslevs <- levels(exp1$pas)
+N <- length(subjects)
+
+#sigmodel_fitted <- unlist(sapply(subjects, sigmodel, dat = exp1, USE.NAMES = TRUE))
+
+#sigmodel_fitted <- sapply(subjects, sigmodel, dat = exp1, USE.NAMES = TRUE, simplify = FALSE)
+
+
+sigmodel_params <- array(
+    unlist(sapply(
+        subjects,
+        sigmodel,
+        dat = exp1,
+        paslevs = paslevs,
+        USE.NAMES = FALSE,
+        simplify = FALSE)),
+    dim = c(4, 4, N), dimnames = list(pars, paslevs, subjects))
+
+inter_subj_par_means_by_pas <- rowMeans(sigmodel_params, dims = 2)
+
+
+
+
+sig_fitted <- sapply(
+    paslevs,
+    fit_sigmodel,
+    dat = exp1,
+    params = inter_subj_par_means_by_pas
+)
+
+exp1$y_hat <- unlist(sig_fitted)
+
+
+ggplot(exp1, aes(target.frames, as.numeric(correct), color = pas)) +
+    geom_point() +
+    geom_line(aes(y = y_hat)) +
+    facet_wrap(~subject)
+
+
+```
