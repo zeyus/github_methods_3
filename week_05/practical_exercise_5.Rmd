@@ -71,9 +71,9 @@ samples <- map_df(dat, read_csv, trim_ws = TRUE, na = c("", "NA"), #i
         subject = col_factor()
     ))
 
-exp1 <- subset(samples, !trial.type=="practice") # removing all the practice trials #ii
+exp1 <- samples[samples$trial.type == "experiment", ] # removing all the practice trials #ii
 
-exp1 <- mutate(samples, #iii
+exp1 <- mutate(exp1, #iii
     correct = as.logical(
         ifelse(substr(target.type, 1, 1) == obj.resp, 1, 0)
     )
@@ -210,6 +210,13 @@ We want to test a hypothesis for each of the three neighbouring differences in P
 ```{r}
 m7 <- glmer(correct ~ pas * target.frames + (target.frames | subject), data = exp1, family = binomial(link = "logit"), control = glmerControl(optimizer = "bobyqa"))
 summary(m7)
+# levels(exp1$pas)
+# exp1_relevel <- exp1
+# exp1_relevel$pas <- relevel(exp1$pas, "1")
+
+
+# m7rl <- glmer(correct ~ pas * target.frames + (target.frames | subject), data = exp1_relevel, family = binomial(link = "logit"), control = glmerControl(optimizer = "bobyqa"))
+# summary(m7rl)
 ```
 ### Exercise 6, part 2
 ```{r}
@@ -218,7 +225,7 @@ glht(m7)
 ### Snippet for 6.2.i
 ```{r, eval=FALSE}
 ## testing whether PAS 2 is different from PAS 1
-contrast.vector <- matrix(c(0, 0, 0, 0, 0, 1, 0, 0), nrow = 1)
+contrast.vector <- matrix(c(0, 0, -1, 1, 0, 0, 0, 0), nrow = 1)
 gh <- glht(m7, contrast.vector)
 print(summary(gh))
 ## as another example, we could also test whether there is a difference in
@@ -227,14 +234,19 @@ contrast.vector <- matrix(c(0, -1, 1, 0, 0, 0, 0, 0), nrow = 1)
 gh <- glht(m7, contrast.vector)
 print(summary(gh))
 
+## PAS 4 and 3 (possibly??)
+contrast.vector <- matrix(c(-1, 1, 0, 0, 0, 0, 0, 0), nrow = 1)
+gh <- glht(m7, contrast.vector)
+print(summary(gh))
 
 ```
 ### Exercise 6, part 3
 
 ```{r, eval=FALSE}
-## PAS 4 and 3 (i think??)
-contrast.vector <- matrix(c(-1, 1, 0, 0, 0, 0, 0, 0), nrow = 1)
-gh <- glht(m7, contrast.vector)
+K <- rbind(c(0, 0, -1, 1),
+        c(-1, 1,  0, 0))
+
+gh <- glht(m7, mcp(pas = K))
 print(summary(gh))
 ```
 
@@ -247,16 +259,22 @@ It has four parameters: _a_, which can be interpreted as the minimum accuracy le
 We can define a function of a residual sum of squares as below
 
 ```{r, eval=FALSE}
-RSS <- function(dataset, par)
-{
+
+sigfit <- function(a, b, c, d, x) {
+    a + (b-a)/(1+exp((c-x)/d))
+}
+
+RSS <- function(dataset, par) {
     ## "dataset" should be a data.frame containing the variables x (target.frames)
     ## and y (correct)
     
     ## "par" are our four parameters (a numeric vector) 
     ## par[1]=a, par[2]=b, par[3]=c, par[4]=d
+    ####      0     1           1         1
     x <- dataset$x
     y <- dataset$y
-    y.hat <- ## you fill in the estimate of y.hat
+    # ŷ = b0 + b1*x
+    y.hat <- sigfit(par[1], par[2], par[3], par[4], x)
     RSS <- sum((y - y.hat)^2)
     return(RSS)
 }
@@ -279,5 +297,88 @@ RSS <- function(dataset, par)
 ## Answers
 
 ### Exercise 7, part 1
+```{r}
+subj7 <- exp1[exp1$subject == "007",]
+subj7xy <- data.frame(x = subj7$target.frames, y = subj7$correct, pas = subj7$pas)
+
+s7p1 <- optim(
+    par = c(0, 1, 1, 1),
+    fn = RSS,
+    data = subj7xy[subj7xy$pas == "1", ],
+    method = "L-BFGS-B",
+    lower = c(0, 0, -Inf, -Inf),
+    upper = c(1, 1, Inf, Inf)
+)
+p1fit <- sigfit(
+            a = s7p1$par[1],
+            b = s7p1$par[2],
+            c = s7p1$par[3],
+            d = s7p1$par[4],
+            x = subj7xy[subj7xy$pas == "1", ]$x)
+
+s7p2 <- optim(
+    par = c(0, 1, 1, 1),
+    fn = RSS,
+    data = subj7xy[subj7xy$pas == "2", ],
+    method = "L-BFGS-B",
+    lower = c(0, 0, -Inf, -Inf),
+    upper = c(1, 1, Inf, Inf)
+)
+
+p2fit <- sigfit(
+            a = s7p2$par[1],
+            b = s7p2$par[2],
+            c = s7p2$par[3],
+            d = s7p2$par[4],
+            x = subj7xy[subj7xy$pas == "2", ]$x)
+
+s7p3 <- optim(
+    par = c(0, 1, 1, 1),
+    fn = RSS,
+    data = subj7xy[subj7xy$pas == "3", ],
+    method = "L-BFGS-B",
+    lower = c(0, 0, -Inf, -Inf),
+    upper = c(1, 1, Inf, Inf)
+)
+
+p3fit <- sigfit(
+            a = s7p3$par[1],
+            b = s7p3$par[2],
+            c = s7p3$par[3],
+            d = s7p3$par[4],
+            x = subj7xy[subj7xy$pas == "3", ]$x)
+
+s7p4 <- optim(
+    par = c(0, 1, 1, 1),
+    fn = RSS,
+    data = subj7xy[subj7xy$pas == "4", ],
+    method = "L-BFGS-B",
+    lower = c(0, 0, -Inf, -Inf),
+    upper = c(1, 1, Inf, Inf)
+)
+
+p4fit <- sigfit(
+            a = s7p4$par[1],
+            b = s7p4$par[2],
+            c = s7p4$par[3],
+            d = s7p4$par[4],
+            x = subj7xy[subj7xy$pas == "4", ]$x)
+length(subj7xy[subj7xy$pas == "1", ]$x)
+length(p1fit)
+subj7xy$yhat <- NA
+subj7xy[subj7xy$pas == "1", ]$yhat <- p1fit
+subj7xy[subj7xy$pas == "2", ]$yhat <- p2fit
+subj7xy[subj7xy$pas == "3", ]$yhat <- p3fit
+subj7xy[subj7xy$pas == "4", ]$yhat <- p4fit
+
+
+ggplot(aes(x = x, y = as.numeric(y), color = pas), data = subj7xy) +
+    geom_jitter(width = 0.25, height = 0.05) +
+    geom_smooth(aes(y = yhat))
+
+
+```
+
+
 
 ### Exercise 7, part 2
