@@ -27,6 +27,7 @@ regressor = LinearRegression()
 fit = regressor.fit(x.reshape(-1, 1), y_noisy)
 y_hat = fit.intercept_ + fit.coef_ * x
 
+
 # plot the fitted line (see the `.intercept_` and `.coef_` attributes of the `regressor` object) on top of the plt
 plt.scatter(x, y_noisy, label='Generated points')
 plt.plot(x, x_squared, label='True function')

@@ -55,6 +55,8 @@ $bias(\hat{f}(x_0)) = E[\hat{f}(x_0)] - f(x_0)$
 ```{python, eval=TRUE}
 # Exercise 1.2
 from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
 def square(x):
     return x**2
 
@@ -66,7 +68,7 @@ np.random.seed(7)
 y_noisy = x + np.random.normal(0, 5, len(x))
 
 # plot the true function and the generated points
-import matplotlib.pyplot as plt
+
 plt.plot(square(x), y_noisy, label='True function')
 
 regressor = LinearRegression()
