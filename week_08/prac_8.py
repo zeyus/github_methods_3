@@ -10,6 +10,8 @@ from multiprocessing.connection import wait
 from time import sleep
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+
 
 
 data = np.load('megmag_data.npy')
@@ -63,13 +65,17 @@ y = np.load('pas_vector.npy')
 # same as number of repititions
 print(y.shape)
 pas_data = []
+pas_index = {}
 for i in np.unique(y):
   print(i)
-  pas_slice = np.unravel_index(np.argwhere(y == i), y.shape)
+  pas_slice = np.argwhere(y == i)
+  data_slice = data[pas_slice].squeeze()
+
   pas_data.append({
     'paslevel': i,
-    'data': data[pas_slice[0],max_resp[0],:],
+    'data': data_slice,
   })
+  pas_index[i] = len(pas_data) - 1
 
 for i in pas_data:
   print('Pas {} shape: {}'.format(i['paslevel'], i['data'].shape))
@@ -89,6 +95,24 @@ plt.show()
 
 #%% Exercise 2
 # create a new array called data_1_2 that only contains PAS responses 1 and 2
-data_1_2 = data[np.argwhere(y == 1) | np.argwhere(y == 2)]
+
+data_1_2 = np.concatenate((pas_data[pas_index[1]]['data'], pas_data[pas_index[2]]['data']), axis = 0)
+print(data_1_2.shape)
 # Similarly, create a y_1_2 for the target vector
-y_1_2 = y[np.where(y == 1) | np.where(y == 2)]
+y_1_2 = y[np.where((y == 1) | (y == 2))]
+
+#Our data_1_2 is a three-dimensional array. Our strategy will be to collapse our two last dimensions (sensors and time) into one dimension, while keeping the first dimension as it is (repetitions). Use np.reshape to create a variable X_1_2 that fulfils these criteria.
+X_1_2 = np.reshape(data_1_2, (data_1_2.shape[0], data_1_2.shape[1] * data_1_2.shape[2]))
+
+print(X_1_2.shape)
+#  and scale X_1_2
+sc = StandardScaler()
+Y_1_2_fit = sc.fit(X_1_2)
+X_1_2_std = sc.transform(X_1_2)
+
+# Do a standard LogisticRegression - can be imported from sklearn.linear_model - make sure there is no penalty applied
+from sklearn.linear_model import LogisticRegression
+lr = LogisticRegression()
+print(lr.fit(X_1_2_std, y_1_2))
+
+print(lr.score(X_1_2_std, y_1_2))
