@@ -447,10 +447,9 @@ sigmodel_params <- array(
         paslevs = paslevs,
         USE.NAMES = FALSE,
         simplify = FALSE)),
-    dim = c(4, 4, N), dimnames = list(pars, paslevs, subjects))
+    dim = c(4, 4), dimnames = list(pars, paslevs, subjects))
 
 inter_subj_par_means_by_pas <- rowMeans(sigmodel_params, dims = 2)
-
 
 
 
@@ -461,13 +460,17 @@ sig_fitted <- sapply(
     params = inter_subj_par_means_by_pas
 )
 
-exp1$y_hat <- unlist(sig_fitted)
-
+exp1$y_hat <- NA
+exp1[exp1$pas == 1,]$y_hat <- sig_fitted$`1`
+exp1[exp1$pas == 2,]$y_hat <- sig_fitted$`2`
+exp1[exp1$pas == 3,]$y_hat <- sig_fitted$`3`
+exp1[exp1$pas == 4,]$y_hat <- sig_fitted$`4`
 
 ggplot(exp1, aes(target.frames, as.numeric(correct), color = pas)) +
-    geom_point() +
-    geom_line(aes(y = y_hat)) +
-    facet_wrap(~subject)
-
+     stat_summary(fun.data = "mean_cl_boot", size = 1.5) +
+     geom_line(aes(x = target.frames, y = y_hat, linetype = "Predicted"), size = 1.5) +
+     labs(x = "Target frames", y = "Accuracy", color = "PAS rating", linetype = "Model")
+     # theme(legend.title = element_blank())
+     
 
 ```
