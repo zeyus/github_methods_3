@@ -149,7 +149,8 @@ m4 <- glmer(correct ~ target.frames + (target.frames | subject), data = exp1, fa
 ggplot(exp1, aes(target.frames, as.numeric(correct), color = correct)) +
     geom_point() +
     geom_point(aes(target.frames, fitted.values(m4)), shape = 3, color = "black", inherit.aes = FALSE) +
-    facet_wrap(~subject)
+    facet_wrap(~subject) +
+    labs(x = "Target frames", y = "Accuracy", title = "Logistic regression model") +
 
 (subj24_accuracy <- exp1 %>% filter(subject == "024") %>% summarise(accuracy = sum(correct)/n()))
 ```
@@ -180,7 +181,9 @@ summary(m6)
 ggplot(exp1, aes(target.frames, as.numeric(correct), color = pas)) +
     geom_point() +
     geom_point(aes(target.frames, fitted.values(m6)), shape = 3) +
-    facet_wrap(~subject)
+    facet_wrap(~subject) +
+    labs(x = "Target frames", y = "Accuracy", title = "Logistic regression model") +
+
     
 ```
 
@@ -371,7 +374,8 @@ ggplot(aes(x = x, y = as.numeric(y), color = pas), data = subj7xy) +
     geom_line(aes(y = yhat)) +
     geom_point(aes(y = yhat), shape = 3, size = 3) +
     geom_text(aes(y = yhat, label = round(yhat, 2)),
-        color = "black", nudge_x = -0.1, nudge_y = 0.005)
+        color = "black", nudge_x = -0.1, nudge_y = 0.005) +
+    labs(x = "Target frames", y = "Accuracy", title = "Subject 7")
 
 s7m7fit <- predict(m7, newdata = subj7, type = "response")
 
