@@ -150,7 +150,7 @@ ggplot(exp1, aes(target.frames, as.numeric(correct), color = correct)) +
     geom_point() +
     geom_point(aes(target.frames, fitted.values(m4)), shape = 3, color = "black", inherit.aes = FALSE) +
     facet_wrap(~subject) +
-    labs(x = "Target frames", y = "Accuracy", title = "Logistic regression model") +
+    labs(x = "Target frames", y = "Accuracy", title = "Logistic regression model")
 
 (subj24_accuracy <- exp1 %>% filter(subject == "024") %>% summarise(accuracy = sum(correct)/n()))
 ```
@@ -182,7 +182,7 @@ ggplot(exp1, aes(target.frames, as.numeric(correct), color = pas)) +
     geom_point() +
     geom_point(aes(target.frames, fitted.values(m6)), shape = 3) +
     facet_wrap(~subject) +
-    labs(x = "Target frames", y = "Accuracy", title = "Logistic regression model") +
+    labs(x = "Target frames", y = "Accuracy", title = "Logistic regression model")
 
     
 ```
@@ -451,7 +451,7 @@ sigmodel_params <- array(
         paslevs = paslevs,
         USE.NAMES = FALSE,
         simplify = FALSE)),
-    dim = c(4, 4), dimnames = list(pars, paslevs, subjects))
+    dim = c(4, 4, N), dimnames = list(pars, paslevs, subjects))
 
 inter_subj_par_means_by_pas <- rowMeans(sigmodel_params, dims = 2)
 
