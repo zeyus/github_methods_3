@@ -15,8 +15,10 @@ output: html_document
 
 knitr::opts_chunk$set(echo = TRUE)
 
-pacman::p_load("tidyverse", "lme4", "lmerTest", "piecewiseSEM", "dfoptim", "multcomp")
-
+pacman::p_load(
+    "tidyverse", "lme4",
+    "lmerTest", "piecewiseSEM",
+    "dfoptim", "multcomp")
 ```
 
 
@@ -50,7 +52,8 @@ The data is associated with Experiment 1 of the article at the following DOI htt
 
 dat <- list.files(path = "./experiment_1/", full.names = TRUE)
 
-samples <- map_df(dat, read_csv, trim_ws = TRUE, na = c("", "NA"), #i
+samples <- map_df(dat, read_csv,
+    trim_ws = TRUE, na = c("", "NA"), # i
     col_types = cols(
         trial.type = col_factor(),
         pas = col_factor(),
@@ -69,19 +72,18 @@ samples <- map_df(dat, read_csv, trim_ws = TRUE, na = c("", "NA"), #i
         seed = col_double(),
         obj.resp = col_factor(),
         subject = col_factor()
-    ))
-
-exp1 <- samples[samples$trial.type == "experiment", ] # removing all the practice trials #ii
-
-exp1 <- mutate(exp1, #iii
+    )
+)
+# removing all the practice trials #ii
+exp1 <- samples[samples$trial.type == "experiment", ]
+exp1 <- mutate(exp1, # iii
     correct = as.logical(
         ifelse(substr(target.type, 1, 1) == obj.resp, 1, 0)
     )
 )
-
-#iv in the previous experiment, the number of target frames was fixed at 3, whereas this time it the target frames was not fixed (they were integer numbers from 1-6), and in the last experiment where target.contrast was not fixed but for this experiment target.contrast was fixed at 0.1
 ```
 
+iv in the previous experiment, the number of target frames was fixed at 3, whereas this time it the target frames was not fixed (they were integer numbers from 1-6), and in the last experiment where target.contrast was not fixed but for this experiment target.contrast was fixed at 0.1
 
 
 # EXERCISE 5 - Use log-likelihood ratio tests to evaluate logistic regression models
@@ -104,18 +106,20 @@ exp1 <- mutate(exp1, #iii
 
 ```{r}
 
-m1 <- glm(correct ~ target.frames, data = exp1, family = binomial(link = "logit"))
+m1 <- glm(correct ~ target.frames, data = exp1,
+    family = binomial(link = "logit"))
 summary(m1)
 
-m2 <- glmer(correct ~ target.frames + (1 | subject), data = exp1, family = binomial(link = "logit"))
+m2 <- glmer(correct ~ target.frames + (1 | subject),
+    data = exp1, family = binomial(link = "logit"))
 summary(m2)
 
 likelihood <- function(p, y) {
-    prod((p^y)*(1-p)^(1-y))
+    prod((p^y) * (1 - p)^(1 - y))
 }
 
 log_likelihood <- function(p, y) {
-    sum(y*log(p)+(1-y)*log(1-p))
+    sum(y * log(p) + (1 - y) * log(1 - p))
 }
 
 p <- fitted.values(m1)
@@ -134,9 +138,11 @@ log_likelihood(p, exp1$correct)
 m0 <- glm(correct ~ 1, data = exp1, family = binomial(link = "logit"))
 
 
-m3 <- glmer(correct ~ 1 + (1|subject), data = exp1, family = binomial(link = "logit"))
+m3 <- glmer(correct ~ 1 + (1 | subject),
+    data = exp1, family = binomial(link = "logit"))
 
-m4 <- glmer(correct ~ target.frames + (target.frames | subject), data = exp1, family = binomial(link = "logit"))
+m4 <- glmer(correct ~ target.frames + (target.frames | subject),
+    data = exp1, family = binomial(link = "logit"))
 
 
 (m0_ll <- logLik(m0))
@@ -148,11 +154,17 @@ m4 <- glmer(correct ~ target.frames + (target.frames | subject), data = exp1, fa
 
 ggplot(exp1, aes(target.frames, as.numeric(correct), color = correct)) +
     geom_point() +
-    geom_point(aes(target.frames, fitted.values(m4)), shape = 3, color = "black", inherit.aes = FALSE) +
+    geom_point(aes(target.frames, fitted.values(m4)),
+        shape = 3, color = "black", inherit.aes = FALSE) +
     facet_wrap(~subject) +
-    labs(x = "Target frames", y = "Accuracy", title = "Logistic regression model")
+    labs(
+        x = "Target frames",
+        y = "Accuracy",
+        title = "Logistic regression model")
 
-(subj24_accuracy <- exp1 %>% filter(subject == "024") %>% summarise(accuracy = sum(correct)/n()))
+(subj24_accuracy <- exp1 %>%
+    filter(subject == "024") %>%
+    summarise(accuracy = sum(correct) / n()))
 ```
 We have run binomial regression models, in which we tested the relationship between the variable _correct_ predicted by _target.frames_. Different models using fixed and and random effects were created for comparison. The quality of the models Was compared by using the log-likelihood function.   
 Out of the 5 models, we choose m4 as our best model, as it has the highest LogLik value of -10676.02, with 5 degrees of freedom. The worst models are m0 and m1 which both have the value of -13611.05 (which makes sense, as these are representetives of the null-hypothesis).
@@ -171,10 +183,13 @@ The intercept of the model is at 14.97, which is when _target.frames_=0?
 
 ### Exercise 5, part 3
 ```{r}
-m5 <- glmer(correct ~ target.frames + pas + (target.frames | subject), data = exp1, family = binomial(link = "logit"))
+m5 <- glmer(correct ~ target.frames + pas + (target.frames | subject),
+    data = exp1, family = binomial(link = "logit"))
 (m5_ll <- logLik(m5))
 
-m6 <- glmer(correct ~ target.frames + pas + (pas*target.frames) + (target.frames | subject), data = exp1, family = binomial(link = "logit"), control = glmerControl(optimizer = "bobyqa"))
+m6 <- glmer(correct ~ target.frames + pas +
+    (pas * target.frames) + (target.frames | subject),
+    data = exp1, family = binomial(link = "logit"), control = glmerControl(optimizer = "bobyqa"))
 (m6_ll <- logLik(m6))
 summary(m6)
 
@@ -182,9 +197,10 @@ ggplot(exp1, aes(target.frames, as.numeric(correct), color = pas)) +
     geom_point() +
     geom_point(aes(target.frames, fitted.values(m6)), shape = 3) +
     facet_wrap(~subject) +
-    labs(x = "Target frames", y = "Accuracy", title = "Logistic regression model")
-
-    
+    labs(
+        x = "Target frames",
+        y = "Accuracy",
+        title = "Logistic regression model")
 ```
 
 m4_ll = -10676.02, df=(5)
@@ -211,15 +227,11 @@ We want to test a hypothesis for each of the three neighbouring differences in P
 ### Exercise 6, part 1
 
 ```{r}
-m7 <- glmer(correct ~ pas * target.frames + (target.frames | subject), data = exp1, family = binomial(link = "logit"), control = glmerControl(optimizer = "bobyqa"))
+m7 <- glmer(correct ~ pas * target.frames +
+    (target.frames | subject), data = exp1,
+    family = binomial(link = "logit"),
+    control = glmerControl(optimizer = "bobyqa"))
 summary(m7)
-# levels(exp1$pas)
-# exp1_relevel <- exp1
-# exp1_relevel$pas <- relevel(exp1$pas, "1")
-
-
-# m7rl <- glmer(correct ~ pas * target.frames + (target.frames | subject), data = exp1_relevel, family = binomial(link = "logit"), control = glmerControl(optimizer = "bobyqa"))
-# summary(m7rl)
 ```
 ### Exercise 6, part 2
 ```{r}
@@ -237,17 +249,18 @@ contrast.vector <- matrix(c(0, -1, 1, 0, 0, 0, 0, 0), nrow = 1)
 gh <- glht(m7, contrast.vector)
 print(summary(gh))
 
-## PAS 4 and 3 (possibly??)
+## PAS 4 and 3
 contrast.vector <- matrix(c(-1, 1, 0, 0, 0, 0, 0, 0), nrow = 1)
 gh <- glht(m7, contrast.vector)
 print(summary(gh))
-
 ```
 ### Exercise 6, part 3
 
 ```{r, eval=FALSE}
-K <- rbind(c(0, 0, -1, 1),
-        c(-1, 1,  0, 0))
+K <- rbind(
+    c(0, 0, -1, 1),
+    c(-1, 1, 0, 0)
+)
 
 gh <- glht(m7, mcp(pas = K))
 print(summary(gh))
@@ -264,7 +277,7 @@ We can define a function of a residual sum of squares as below
 ```{r}
 
 sigfit <- function(a, b, c, d, x) {
-    a + (b-a)/(1+exp((c-x)/d))
+    a + (b - a) / (1 + exp((c - x) / d))
 }
 
 RSS <- function(dataset, par) {
@@ -274,7 +287,6 @@ RSS <- function(dataset, par) {
     RSS <- sum((y - y.hat)^2)
     return(RSS)
 }
-
 ```
 
 1) Now, we will fit the sigmoid for the four PAS ratings for Subject 7
@@ -295,8 +307,11 @@ RSS <- function(dataset, par) {
 
 ### Exercise 7, part 1
 ```{r}
-subj7 <- exp1[exp1$subject == "007",]
-subj7xy <- data.frame(x = subj7$target.frames, y = subj7$correct, pas = subj7$pas)
+subj7 <- exp1[exp1$subject == "007", ]
+subj7xy <- data.frame(
+    x = subj7$target.frames,
+    y = subj7$correct,
+    pas = subj7$pas)
 
 s7p1 <- optim(
     par = c(0, 1, 1, 1),
@@ -307,11 +322,12 @@ s7p1 <- optim(
     upper = c(1, 1, Inf, Inf)
 )
 p1fit <- sigfit(
-            a = s7p1$par[1],
-            b = s7p1$par[2],
-            c = s7p1$par[3],
-            d = s7p1$par[4],
-            x = subj7xy[subj7xy$pas == "1", ]$x)
+    a = s7p1$par[1],
+    b = s7p1$par[2],
+    c = s7p1$par[3],
+    d = s7p1$par[4],
+    x = subj7xy[subj7xy$pas == "1", ]$x
+)
 
 s7p2 <- optim(
     par = c(0, 1, 1, 1),
@@ -323,11 +339,12 @@ s7p2 <- optim(
 )
 
 p2fit <- sigfit(
-            a = s7p2$par[1],
-            b = s7p2$par[2],
-            c = s7p2$par[3],
-            d = s7p2$par[4],
-            x = subj7xy[subj7xy$pas == "2", ]$x)
+    a = s7p2$par[1],
+    b = s7p2$par[2],
+    c = s7p2$par[3],
+    d = s7p2$par[4],
+    x = subj7xy[subj7xy$pas == "2", ]$x
+)
 
 s7p3 <- optim(
     par = c(0, 1, 1, 1),
@@ -339,11 +356,12 @@ s7p3 <- optim(
 )
 
 p3fit <- sigfit(
-            a = s7p3$par[1],
-            b = s7p3$par[2],
-            c = s7p3$par[3],
-            d = s7p3$par[4],
-            x = subj7xy[subj7xy$pas == "3", ]$x)
+    a = s7p3$par[1],
+    b = s7p3$par[2],
+    c = s7p3$par[3],
+    d = s7p3$par[4],
+    x = subj7xy[subj7xy$pas == "3", ]$x
+)
 
 s7p4 <- optim(
     par = c(0, 1, 1, 1),
@@ -355,11 +373,12 @@ s7p4 <- optim(
 )
 
 p4fit <- sigfit(
-            a = s7p4$par[1],
-            b = s7p4$par[2],
-            c = s7p4$par[3],
-            d = s7p4$par[4],
-            x = subj7xy[subj7xy$pas == "4", ]$x)
+    a = s7p4$par[1],
+    b = s7p4$par[2],
+    c = s7p4$par[3],
+    d = s7p4$par[4],
+    x = subj7xy[subj7xy$pas == "4", ]$x
+)
 length(subj7xy[subj7xy$pas == "1", ]$x)
 length(p1fit)
 subj7xy$yhat <- NA
@@ -374,15 +393,16 @@ ggplot(aes(x = x, y = as.numeric(y), color = pas), data = subj7xy) +
     geom_line(aes(y = yhat)) +
     geom_point(aes(y = yhat), shape = 3, size = 3) +
     geom_text(aes(y = yhat, label = round(yhat, 2)),
-        color = "black", nudge_x = -0.1, nudge_y = 0.005) +
+        color = "black", nudge_x = -0.1, nudge_y = 0.005
+    ) +
     labs(x = "Target frames", y = "Accuracy", title = "Subject 7")
 
 s7m7fit <- predict(m7, newdata = subj7, type = "response")
 
-ggplot(aes(x = target.frames, y = as.numeric(correct), color = pas), data = subj7) +
+ggplot(aes(x = target.frames, y = as.numeric(correct),color = pas),
+    data = subj7) +
     geom_jitter(width = 0.25, height = 0.05) +
     geom_line(aes(y = s7m7fit))
-
 ```
 
 
@@ -394,7 +414,9 @@ ggplot(aes(x = target.frames, y = as.numeric(correct), color = pas), data = subj
 
 
 sigmodel_pas <- function(pas_lev, subjx) {
-    dat <- data.frame(x = subjx[subjx$pas == pas_lev, ]$target.frames, y = subjx[subjx$pas == pas_lev, ]$correct)
+    dat <- data.frame(
+        x = subjx[subjx$pas == pas_lev, ]$target.frames,
+        y = subjx[subjx$pas == pas_lev, ]$correct)
     subjxpx_opt <- optim(
         par = c(0, 1, 1, 1),
         fn = RSS,
@@ -403,45 +425,35 @@ sigmodel_pas <- function(pas_lev, subjx) {
         lower = c(0, 0, -Inf, -Inf),
         upper = c(1, 1, Inf, Inf)
     )
-    # pxfit <- sigfit(
-    #         a = subjxpx_opt$par[1],
-    #         b = subjxpx_opt$par[2],
-    #         c = subjxpx_opt$par[3],
-    #         d = subjxpx_opt$par[4],
-    #         x = dat$x)
 
     list(
         subjxpx_opt$par[1],
         subjxpx_opt$par[2],
         subjxpx_opt$par[3],
-        subjxpx_opt$par[4])
-
+        subjxpx_opt$par[4]
+    )
 }
 
 sigmodel <- function(x, dat, paslevs) {
     subjx <- dat[dat$subject == x, ]
-    sapply(paslevs, sigmodel_pas, subjx = subjx, USE.NAMES = FALSE, simplify = FALSE)
-
+    sapply(paslevs, sigmodel_pas, subjx = subjx,
+        USE.NAMES = FALSE, simplify = FALSE)
 }
 
 fit_sigmodel <- function(pas, dat, params) {
     sigfit(
-            a = params[, pas][1],
-            b = params[, pas][2],
-            c = params[, pas][3],
-            d = params[, pas][4],
-            x = dat[dat$pas == pas, ]$target.frames)
+        a = params[, pas][1],
+        b = params[, pas][2],
+        c = params[, pas][3],
+        d = params[, pas][4],
+        x = dat[dat$pas == pas, ]$target.frames
+    )
 }
 
 pars <- c("a", "b", "c", "d")
 subjects <- levels(exp1$subject)
 paslevs <- levels(exp1$pas)
 N <- length(subjects)
-
-#sigmodel_fitted <- unlist(sapply(subjects, sigmodel, dat = exp1, USE.NAMES = TRUE))
-
-#sigmodel_fitted <- sapply(subjects, sigmodel, dat = exp1, USE.NAMES = TRUE, simplify = FALSE)
-
 
 sigmodel_params <- array(
     unlist(sapply(
@@ -450,8 +462,10 @@ sigmodel_params <- array(
         dat = exp1,
         paslevs = paslevs,
         USE.NAMES = FALSE,
-        simplify = FALSE)),
-    dim = c(4, 4, N), dimnames = list(pars, paslevs, subjects))
+        simplify = FALSE
+    )),
+    dim = c(4, 4, N), dimnames = list(pars, paslevs, subjects)
+)
 
 inter_subj_par_means_by_pas <- rowMeans(sigmodel_params, dims = 2)
 
@@ -465,16 +479,21 @@ sig_fitted <- sapply(
 )
 
 exp1$y_hat <- NA
-exp1[exp1$pas == 1,]$y_hat <- sig_fitted$`1`
-exp1[exp1$pas == 2,]$y_hat <- sig_fitted$`2`
-exp1[exp1$pas == 3,]$y_hat <- sig_fitted$`3`
-exp1[exp1$pas == 4,]$y_hat <- sig_fitted$`4`
+exp1[exp1$pas == 1, ]$y_hat <- sig_fitted$`1`
+exp1[exp1$pas == 2, ]$y_hat <- sig_fitted$`2`
+exp1[exp1$pas == 3, ]$y_hat <- sig_fitted$`3`
+exp1[exp1$pas == 4, ]$y_hat <- sig_fitted$`4`
 
 ggplot(exp1, aes(target.frames, as.numeric(correct), color = pas)) +
-     stat_summary(fun.data = "mean_cl_boot", size = 1.5) +
-     geom_line(aes(x = target.frames, y = y_hat, linetype = "Predicted"), size = 1.5) +
-     labs(x = "Target frames", y = "Accuracy", color = "PAS rating", linetype = "Model")
-     # theme(legend.title = element_blank())
-     
-
+    stat_summary(fun.data = "mean_cl_boot", size = 1.5) +
+    geom_line(
+        aes(x = target.frames, y = y_hat, linetype = "Predicted"),
+        size = 1.5
+    ) +
+    labs(
+        x = "Target frames",
+        y = "Accuracy",
+        color = "PAS rating",
+        linetype = "Model"
+    )
 ```
