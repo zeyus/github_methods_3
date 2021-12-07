@@ -140,7 +140,7 @@ m4 <- glmer(correct ~ target.frames + (target.frames | subject), data = exp1, fa
 
 
 (m0_ll <- logLik(m0))
-(m1_ll <- logLik(m0))
+(m1_ll <- logLik(m1))
 (m2_ll <- logLik(m2))
 (m3_ll <- logLik(m3))
 (m4_ll <- logLik(m4))
