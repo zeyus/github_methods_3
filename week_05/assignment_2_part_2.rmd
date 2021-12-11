@@ -1,10 +1,10 @@
 ---
-title: "Portfolio Assignment 2, part 1, Methods 3, 2021, autumn semester"
+title: "Portfolio Assignment 2, part 2, Methods 3, 2021, autumn semester"
 author: "Study Group 8, Emma Rose Hahn (EH), Viara Krasteva (VK), Kristian Nøhr Villebro (KV), Luke Ring (LR)"
 output:
   html_document: default
 ---
-###Student numbers 
+### Student numbers 
 
 Emma Rose Hahn: 202004249
 Viara Krasteva: 202005673

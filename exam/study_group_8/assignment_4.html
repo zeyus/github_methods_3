@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>assignment_4, Methods 3, 2021, autumn semester</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>assignment_4</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 
 
 
@@ -14512,14 +14512,19 @@ a.anchor-link {
     </script>
     <!-- End of mathjax configuration --></head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-  <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-  </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-  <h1 id="Portfolio-Assignment-4">Portfolio Assignment 4, Methods 3, 2021, autumn semester<a class="anchor-link" href="#Portfolio-Assignment-4">&#182;</a></h1>
-  <h4 class="author">Study Group 8, Emma Rose Hahn (EH), Viara Krasteva (VK), Kristian Nøhr Villebro (KV), Luke Ring (LR)</h4>
-  <h2 id="Exercise-1---Use-principal-component-analysis-to-improve-the-classification-of-subjective-experience">Exercise 1 - Use principal component analysis to improve the classification of subjective experience<a class="anchor-link" href="#Exercise-1---Use-principal-component-analysis-to-improve-the-classification-of-subjective-experience">&#182;</a></h2><h3 id="1.1---Create-a-covariance-matrix,-find-the-eigenvectors-and-the-eigenvalues-(EH)">1.1 - Create a covariance matrix, find the eigenvectors and the eigenvalues (EH)<a class="anchor-link" href="#1.1---Create-a-covariance-matrix,-find-the-eigenvectors-and-the-eigenvalues-(EH)">&#182;</a></h3>
-  </div>
-  </div>
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h1 id="Portfolio-Assignment-4">Portfolio Assignment 4<a class="anchor-link" href="#Portfolio-Assignment-4">&#182;</a></h1><p><strong>Study Group 8, Emma Rose Hahn (EH), Viara Krasteva (VK), Kristian Nøhr Villebro (KV), Luke Ring (LR)</strong></p>
+<h3 id="Student-numbers">Student numbers<a class="anchor-link" href="#Student-numbers">&#182;</a></h3><ul>
+<li>Emma Rose Hahn: 202004249</li>
+<li>Kristian Nøhr Villebro: 202005289</li>
+<li>Luke Ring: 202009983</li>
+<li>Viara Krasteva: 202005673</li>
+</ul>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
@@ -14576,7 +14581,11 @@ a.anchor-link {
 </div>
 
 </div>
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="Exercise-1---Use-principal-component-analysis-to-improve-the-classification-of-subjective-experience">Exercise 1 - Use principal component analysis to improve the classification of subjective experience<a class="anchor-link" href="#Exercise-1---Use-principal-component-analysis-to-improve-the-classification-of-subjective-experience">&#182;</a></h2><h3 id="1.1---Create-a-covariance-matrix,-find-the-eigenvectors-and-the-eigenvalues-(EH)">1.1 - Create a covariance matrix, find the eigenvectors and the eigenvalues (EH)<a class="anchor-link" href="#1.1---Create-a-covariance-matrix,-find-the-eigenvectors-and-the-eigenvalues-(EH)">&#182;</a></h3>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
@@ -14591,14 +14600,18 @@ a.anchor-link {
 </div>
 </div>
 
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h4 id="1.1.ii)-Equalize-the-number-of-targets-in-y-and-data-using-equalize_targets">1.1.ii) Equalize the number of targets in y and data using equalize_targets<a class="anchor-link" href="#1.1.ii)-Equalize-the-number-of-targets-in-y-and-data-using-equalize_targets">&#182;</a></h4>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 1.1.ii) Equalize the number of targets in y and data using equalize_targets</span>
-<span class="n">data</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">equalize_targets</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pas_data</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">equalize_targets</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pas_data</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14606,15 +14619,18 @@ a.anchor-link {
 </div>
 </div>
 
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h4 id="1.1.iii)-times-and-1.1.iii)-reduce-to-two-dimensions-only-using-248ms">1.1.iii) times and 1.1.iii) reduce to two dimensions only using 248ms<a class="anchor-link" href="#1.1.iii)-times-and-1.1.iii)-reduce-to-two-dimensions-only-using-248ms">&#182;</a></h4>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 1.1.iii) times</span>
-<span class="n">times</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">200</span><span class="p">,</span> <span class="mi">804</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> 
-<span class="c1"># 1.1.iii) reduce to two dimensions only using 248ms</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">times</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">200</span><span class="p">,</span> <span class="mi">804</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> 
 <span class="n">data_reduced</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">times</span> <span class="o">==</span> <span class="mi">248</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span>
 </pre></div>
 
@@ -14623,14 +14639,18 @@ a.anchor-link {
 </div>
 </div>
 
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h4 id="1.1.iv)-Scale-the-data-using-StandardScaler">1.1.iv) Scale the data using StandardScaler<a class="anchor-link" href="#1.1.iv)-Scale-the-data-using-StandardScaler">&#182;</a></h4>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 1.1.iv) Scale the data using StandardScaler</span>
-<span class="n">sc</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sc</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
 <span class="n">data_scaled</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data_reduced</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
 
@@ -14639,14 +14659,18 @@ a.anchor-link {
 </div>
 </div>
 
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h4 id="1.1.v)-Calculate-the-sample-covariance-matrix-using-np.cov">1.1.v) Calculate the sample covariance matrix using np.cov<a class="anchor-link" href="#1.1.v)-Calculate-the-sample-covariance-matrix-using-np.cov">&#182;</a></h4>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 1.1.v) Calculate the sample covariance matrix using np.cov</span>
-<span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">data_scaled</span><span class="p">,</span> <span class="n">rowvar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">data_scaled</span><span class="p">,</span> <span class="n">rowvar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># plot using seaborn heatmap</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;icefire&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -14690,7 +14714,7 @@ a.anchor-link {
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>We see that the off-diagonal activation implies that the signals measured by the sensors are not independent. This makes sense as activity in the brain can involve multiple regions, and we would expect to see some correlation and covariance between sensors.</p>
-
+<h4 id="1.1.vii-Run-np.linalg.matrix_rank-on-the-covariance-matrix---what-integer-value-do-you-get?-(we'll-use-this-later)">1.1.vii Run np.linalg.matrix_rank on the covariance matrix - what integer value do you get? (we'll use this later)<a class="anchor-link" href="#1.1.vii-Run-np.linalg.matrix_rank-on-the-covariance-matrix---what-integer-value-do-you-get?-(we'll-use-this-later)">&#182;</a></h4>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
@@ -14698,8 +14722,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 1.1.vii Run np.linalg.matrix_rank on the covariance matrix - what integer value do you get? (we&#39;ll use this later)</span>
-<span class="n">rank</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">matrix_rank</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">rank</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">matrix_rank</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Matrix rank: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rank</span><span class="p">))</span>
 </pre></div>
 
@@ -14729,14 +14752,18 @@ a.anchor-link {
 
 </div>
 
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h4 id="1.1.viii)-Find-the-eigenvalues-and-eigenvectors-of-the-covariance-matrix-using-np.linalg.eig">1.1.viii) Find the eigenvalues and eigenvectors of the covariance matrix using np.linalg.eig<a class="anchor-link" href="#1.1.viii)-Find-the-eigenvalues-and-eigenvectors-of-the-covariance-matrix-using-np.linalg.eig">&#182;</a></h4>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 1.1.viii) Find the eigenvalues and eigenvectors of the covariance matrix using np.linalg.eig</span>
-<span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">)</span>
 <span class="c1"># Use np.real to retrieve only the real parts of the eigenvalues and eigenvectors</span>
 <span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">))</span>
 <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">eigenvectors</span><span class="p">)</span>
@@ -14750,8 +14777,7 @@ a.anchor-link {
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>1.2 - Create the weighting matrix W and the projected data, Z</p>
-
+<h3 id="1.2---Create-the-weighting-matrix-W-and-the-projected-data,-Z">1.2 - Create the weighting matrix W and the projected data, Z<a class="anchor-link" href="#1.2---Create-the-weighting-matrix-W-and-the-projected-data,-Z">&#182;</a></h3><h4 id="1.2.i-to-1.2.iii)-sort-the-eigenvectors-and-eigenvalues-according-to-the-absolute-values-of-the-eigenvalues">1.2.i to 1.2.iii) sort the eigenvectors and eigenvalues according to the absolute values of the eigenvalues<a class="anchor-link" href="#1.2.i-to-1.2.iii)-sort-the-eigenvectors-and-eigenvalues-according-to-the-absolute-values-of-the-eigenvalues">&#182;</a></h4>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
@@ -14759,8 +14785,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 1.2.i to 1.2.iii) sort the eigenvectors and eigenvalues according to the absolute values of the eigenvalues</span>
-<span class="c1"># get the sorted indices of absolute values in reverse order</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># get the sorted indices of absolute values in reverse order</span>
 <span class="n">sorted_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 <span class="c1"># sorted eigenvalues</span>
 <span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="n">sorted_indices</span><span class="p">]</span>
@@ -14773,14 +14798,18 @@ a.anchor-link {
 </div>
 </div>
 
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h4 id="1.2.iv)-Plot-the-log-of-the-eigenvalues">1.2.iv) Plot the log of the eigenvalues<a class="anchor-link" href="#1.2.iv)-Plot-the-log-of-the-eigenvalues">&#182;</a></h4>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 1.2.iv) Plot the log of the eigenvalues</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">),</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">),</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Eigenvalue index&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Log of absolute eigenvalue&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -14819,7 +14848,7 @@ a.anchor-link {
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h4 id="1.2.iv)-are-there-some-values-that-stand-out-from-the-rest?-(LR)">1.2.iv) are there some values that stand out from the rest? (LR)<a class="anchor-link" href="#1.2.iv)-are-there-some-values-that-stand-out-from-the-rest?-(LR)">&#182;</a></h4><p>The last 5 of the sorted log eigenvalues are much smaller than the previous 97. This matches the result of our matrix rank test which gives values above a threshold.</p>
-
+<h4 id="1.2.v---1.2.vi)-eigenvectors-are-the-weighting-matrix,-create-projected-data-Z-=-W.X">1.2.v - 1.2.vi) eigenvectors are the weighting matrix, create projected data Z = W.X<a class="anchor-link" href="#1.2.v---1.2.vi)-eigenvectors-are-the-weighting-matrix,-create-projected-data-Z-=-W.X">&#182;</a></h4>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
@@ -14827,8 +14856,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 1.2.v - 1.2.vi) eigenvectors are the weighting matrix, create projected data Z = W.X</span>
-<span class="n">Z</span> <span class="o">=</span> <span class="n">data_scaled</span> <span class="o">@</span> <span class="n">eigenvectors</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">Z</span> <span class="o">=</span> <span class="n">data_scaled</span> <span class="o">@</span> <span class="n">eigenvectors</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">Z</span> <span class="o">@</span> <span class="n">eigenvectors</span><span class="o">.</span><span class="n">T</span>
 
 <span class="c1"># check if calculations are correct</span>
@@ -14927,7 +14955,7 @@ a.anchor-link {
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="2---Use-logistic-regression-with-cross-validation-to-find-the-optimal-number-of-principal-components-(VK)">2 - Use logistic regression with cross-validation to find the optimal number of principal components (VK)<a class="anchor-link" href="#2---Use-logistic-regression-with-cross-validation-to-find-the-optimal-number-of-principal-components-(VK)">&#182;</a></h2>
+<h2 id="Exercise-2---Use-logistic-regression-with-cross-validation-to-find-the-optimal-number-of-principal-components-(VK)">Exercise 2 - Use logistic regression with cross-validation to find the optimal number of principal components (VK)<a class="anchor-link" href="#Exercise-2---Use-logistic-regression-with-cross-validation-to-find-the-optimal-number-of-principal-components-(VK)">&#182;</a></h2><h4 id="2.1.i)-run-standard-logistic-regression-(no-regularization)-based-on-Zdxk-and-y">2.1.i) run standard logistic regression (no regularization) based on Zdxk and y<a class="anchor-link" href="#2.1.i)-run-standard-logistic-regression-(no-regularization)-based-on-Zdxk-and-y">&#182;</a></h4>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
@@ -14935,8 +14963,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 2.1.i) run standard logistic regression (no regularization) based on Zdxk and y</span>
-<span class="n">lr</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">fit_intercept</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;newton-cg&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">lr</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">fit_intercept</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;newton-cg&#39;</span><span class="p">)</span>
 <span class="c1"># fit 102 models based on: k=[1,2,...,101,102] and d=102. For each fit get the classification accuracy, (.score), when applied to Z_d×k and y</span>
 <span class="n">scores</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
 <span class="n">d</span> <span class="o">=</span> <span class="n">Z</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -14986,11 +15013,9 @@ a.anchor-link {
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>2.1.ii)  what is the general trend and why is this so? (EH)</p>
-<p>Based on the above plot we could say the general trend is that addming more principle components results in a higher classification accuracy. This is because more variance is accounted for, but it also could mean that the model is overfitting.</p>
-<p>2.1.iii) In terms of classification accuracy, what is the effect of adding the five last components? Why do you think this is so? (KV)</p>
-<p>The last 5 components have a negligible effect, this is because they are the principle components that have the least variance, adding them to our models doesn't provide much additional information.</p>
-
+<h4 id="2.1.ii)--what-is-the-general-trend-and-why-is-this-so?-(EH)">2.1.ii)  what is the general trend and why is this so? (EH)<a class="anchor-link" href="#2.1.ii)--what-is-the-general-trend-and-why-is-this-so?-(EH)">&#182;</a></h4><p>Based on the above plot we could say the general trend is that addming more principle components results in a higher classification accuracy. This is because more variance is accounted for, but it also could mean that the model is overfitting.</p>
+<h4 id="2.1.iii)-In-terms-of-classification-accuracy,-what-is-the-effect-of-adding-the-five-last-components?-Why-do-you-think-this-is-so?-(KV)">2.1.iii) In terms of classification accuracy, what is the effect of adding the five last components? Why do you think this is so? (KV)<a class="anchor-link" href="#2.1.iii)-In-terms-of-classification-accuracy,-what-is-the-effect-of-adding-the-five-last-components?-Why-do-you-think-this-is-so?-(KV)">&#182;</a></h4><p>The last 5 components have a negligible effect, this is because they are the principle components that have the least variance, adding them to our models doesn't provide much additional information.</p>
+<h3 id="2.2)-cross-validate-using-cross_val_score-and-StratifiedKFold-(LR)">2.2) cross validate using cross_val_score and StratifiedKFold (LR)<a class="anchor-link" href="#2.2)-cross-validate-using-cross_val_score-and-StratifiedKFold-(LR)">&#182;</a></h3>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
@@ -14998,8 +15023,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 2.2) cross validate using cross_val_score and StratifiedKFold (LR)</span>
-<span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">()</span>
 <span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">d</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
   <span class="n">Z_k</span> <span class="o">=</span> <span class="n">Z</span><span class="p">[:,</span> <span class="p">:</span><span class="n">k</span><span class="p">]</span>
@@ -15068,10 +15092,8 @@ a.anchor-link {
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>2.2.ii) how is this plot different from the one in Exercise 2.1.ii? (VK)</p>
-<p>This shows a different trend, rather than each additional component increasing the model accuracy, we see a peak at 26 components and after that a decline in accuracy which then levels out at around 70 components. Based on the first model we might assume that adding all the components would result in a higher accuracy, where as using cross-validation we see that the results of the previous model were likely due to overfitting.</p>
-<p>2.2.iii) What is the number of principal components, $k_{max\_accuracy}$, that results in the greatest classification accuracy when cross-validated?</p>
-<p>The peak model performance is 26 components, at around 36% accuracy.</p>
+<h4 id="2.2.ii)-how-is-this-plot-different-from-the-one-in-Exercise-2.1.ii?-(VK)">2.2.ii) how is this plot different from the one in Exercise 2.1.ii? (VK)<a class="anchor-link" href="#2.2.ii)-how-is-this-plot-different-from-the-one-in-Exercise-2.1.ii?-(VK)">&#182;</a></h4><p>This shows a different trend, rather than each additional component increasing the model accuracy, we see a peak at 26 components and after that a decline in accuracy which then levels out at around 70 components. Based on the first model we might assume that adding all the components would result in a higher accuracy, where as using cross-validation we see that the results of the previous model were likely due to overfitting.</p>
+<h4 id="2.2.iii)-What-is-the-number-of-principal-components,-$k_%7Bmax%5C_accuracy%7D$,-that-results-in-the-greatest-classification-accuracy-when-cross-validated?">2.2.iii) What is the number of principal components, $k_{max\_accuracy}$, that results in the greatest classification accuracy when cross-validated?<a class="anchor-link" href="#2.2.iii)-What-is-the-number-of-principal-components,-$k_%7Bmax%5C_accuracy%7D$,-that-results-in-the-greatest-classification-accuracy-when-cross-validated?">&#182;</a></h4><p>The peak model performance is 26 components, at around 36% accuracy.</p>
 
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
@@ -15112,11 +15134,9 @@ a.anchor-link {
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>2.2.iv) How many percentage points is the classification accuracy increased with relative to the to the full-dimensional, d, dataset? (EH)</p>
-<p>using all of the components, the 5-fold cross-validation accuracy is increased by about 6.3%.</p>
-<p>2.2.v) How do the analyses in Exercises 2.1 and 2.2 differ from one another? Make sure to comment on the differences in optimization criteria. (KV)</p>
-<p>Both use a logistic regression model, the key difference here is that the first analysis is adding components and fitting the model to the entire dataset. 2.2 uses stratified 5-fold cross-validation which tries to ensure balanced classes across the folds, as well as training and testing on different subsets of the data. This is a more robust method of testing the model, as it is less prone to overfitting and while the classification accuracy may seem lower, the accuracy in 2.1 is likely overinflated.</p>
-
+<h4 id="2.2.iv)-How-many-percentage-points-is-the-classification-accuracy-increased-with-relative-to-the-to-the-full-dimensional,-d,-dataset?-(EH)">2.2.iv) How many percentage points is the classification accuracy increased with relative to the to the full-dimensional, d, dataset? (EH)<a class="anchor-link" href="#2.2.iv)-How-many-percentage-points-is-the-classification-accuracy-increased-with-relative-to-the-to-the-full-dimensional,-d,-dataset?-(EH)">&#182;</a></h4><p>using all of the components, the 5-fold cross-validation accuracy is increased by about 6.3%.</p>
+<h4 id="2.2.v)-How-do-the-analyses-in-Exercises-2.1-and-2.2-differ-from-one-another?-Make-sure-to-comment-on-the-differences-in-optimization-criteria.-(KV)">2.2.v) How do the analyses in Exercises 2.1 and 2.2 differ from one another? Make sure to comment on the differences in optimization criteria. (KV)<a class="anchor-link" href="#2.2.v)-How-do-the-analyses-in-Exercises-2.1-and-2.2-differ-from-one-another?-Make-sure-to-comment-on-the-differences-in-optimization-criteria.-(KV)">&#182;</a></h4><p>Both use a logistic regression model, the key difference here is that the first analysis is adding components and fitting the model to the entire dataset. 2.2 uses stratified 5-fold cross-validation which tries to ensure balanced classes across the folds, as well as training and testing on different subsets of the data. This is a more robust method of testing the model, as it is less prone to overfitting and while the classification accuracy may seem lower, the accuracy in 2.1 is likely overinflated.</p>
+<h4 id="2.3.i)-For-each-of-the-251-time-samples,-use-the-same-estimator-and-cross-validation-as-in-Exercises-2.1.i-and-2.2.i.-(LR)">2.3.i) For each of the 251 time samples, use the same estimator and cross-validation as in Exercises 2.1.i and 2.2.i. (LR)<a class="anchor-link" href="#2.3.i)-For-each-of-the-251-time-samples,-use-the-same-estimator-and-cross-validation-as-in-Exercises-2.1.i-and-2.2.i.-(LR)">&#182;</a></h4>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
@@ -15124,8 +15144,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 2.3.i) For each of the 251 time samples, use the same estimator and cross-validation as in Exercises 2.1.i and 2.2.i. (LR)</span>
-<span class="n">scores_pca</span> <span class="o">=</span> <span class="p">[]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scores_pca</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">scores_all</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">time_steps</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running analyses for </span><span class="si">{}</span><span class="s2"> time samples from </span><span class="si">{}</span><span class="s2">ms to </span><span class="si">{}</span><span class="s2">ms:&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_steps</span><span class="p">,</span> <span class="n">times</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -15231,8 +15250,7 @@ Preparing plot...
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>2.3.iii) Describe the differences between the two analyses - focus on the time interval between 0 ms and 400 ms - describe in your own words why the logistic regression performs better on the PCA-reduced dataset around the peak magnetic activity (EH)</p>
-<p>The PCA reduced dataset performance tends to be higher than the full dataset, especially around peak activity. The full dataset contains the signal from all the sensors, but some of these may be less relevant to the response being investigated thereby introducing noise into the model. As hypothesized in 2.2.v, the overall accuracy of the full dataset was inflated due to overfitting which reduced its ability to be generalized to other time intervals. Unsurprisingly, as the PCA model underwent more robust validation, the accuracy at the previously modelled timestamp (248ms) remained the same (~36%), and seems to be able to generalize to time intervals around the peak activity, where the signal is likely similar.</p>
+<h4 id="2.3.iii)-Describe-the-differences-between-the-two-analyses---focus-on-the-time-interval-between-0-ms-and-400-ms---describe-in-your-own-words-why-the-logistic-regression-performs-better-on-the-PCA-reduced-dataset-around-the-peak-magnetic-activity-(EH)">2.3.iii) Describe the differences between the two analyses - focus on the time interval between 0 ms and 400 ms - describe in your own words why the logistic regression performs better on the PCA-reduced dataset around the peak magnetic activity (EH)<a class="anchor-link" href="#2.3.iii)-Describe-the-differences-between-the-two-analyses---focus-on-the-time-interval-between-0-ms-and-400-ms---describe-in-your-own-words-why-the-logistic-regression-performs-better-on-the-PCA-reduced-dataset-around-the-peak-magnetic-activity-(EH)">&#182;</a></h4><p>The PCA reduced dataset performance tends to be higher than the full dataset, especially around peak activity. The full dataset contains the signal from all the sensors, but some of these may be less relevant to the response being investigated thereby introducing noise into the model. As hypothesized in 2.2.v, the overall accuracy of the full dataset was inflated due to overfitting which reduced its ability to be generalized to other time intervals. Unsurprisingly, as the PCA model underwent more robust validation, the accuracy at the previously modelled timestamp (248ms) remained the same (~36%), and seems to be able to generalize to time intervals around the peak activity, where the signal is likely similar.</p>
 
 </div>
 </div>
