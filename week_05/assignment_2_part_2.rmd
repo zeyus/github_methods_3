@@ -4,6 +4,13 @@ author: "Study Group 8, Emma Rose Hahn (EH), Viara Krasteva (VK), Kristian Nøhr
 output:
   html_document: default
 ---
+###Student numbers 
+
+Emma Rose Hahn: 202004249
+Viara Krasteva: 202005673
+Kristian Nøhr Villebro: 202005289
+Luke Ring: 202009983
+
 
 <style type="text/css">
   body{

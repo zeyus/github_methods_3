@@ -3,6 +3,13 @@ title: "Portfolio Assignment 1, Methods 3, 2021, autumn semester"
 author: "Study Group 8, Emma Rose Hahn (EH), Viara Krasteva (VK), Kristian Nøhr Villebro (KV), Luke Ring (LR)"
 output: html_document
 ---
+###Student numbers 
+
+Emma Rose Hahn:202004249
+Viara Krasteva: 202005673
+Kristian Nøhr Villebro: 202005289
+Luke Ring: 202009983
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
