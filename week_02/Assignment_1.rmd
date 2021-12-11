@@ -3,7 +3,7 @@ title: "Portfolio Assignment 1, Methods 3, 2021, autumn semester"
 author: "Study Group 8, Emma Rose Hahn (EH), Viara Krasteva (VK), Kristian Nøhr Villebro (KV), Luke Ring (LR)"
 output: html_document
 ---
-###Student numbers 
+### Student numbers 
 
 Emma Rose Hahn:202004249
 Viara Krasteva: 202005673
@@ -14,7 +14,7 @@ Luke Ring: 202009983
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 #load libraries
-pacman::p_load("tidyverse","lme4","piecewiseSEM")
+pacman::p_load("tidyverse", "lme4", "piecewiseSEM")
 ```
 
 # Portfolio Assignment 1: Using mixed effects modelling to model hierarchical data
@@ -209,6 +209,7 @@ Looking at the plot for the observed and the fitted values it looks as if the mo
 ## Exercise 3 - now with attitude 
 
 ### Exercise 3, part 1 --(VK)
+
 1) Carry on with the model with the two unique intercepts fitted (_scenario_ and _subject_) but now build a new model that has _attitude_ as a main effect besides _gender_. After create a separate model that besides the main effects of _attitude_ and _gender_ also include their interaction
 ```{r}
 #making a model with two unicue intercepts and having attitude and gender as main effects
@@ -227,7 +228,8 @@ m9 <- lmer(formula = f0mn ~ gender + attitude + gender:attitude + (1 | subject) 
 summary(m9)
 
 ```
-    The model m9 can be read as following: The intercept for women/inf are $ \approx 256 Hz$, when we look at men with the same attitude their pitch drops by $ \approx 118 Hz $. Overall a polite attitude will result in a drop in pitch by $ \approx 17 Hz$, however for men it will only be $ -17.2+5.5 \approx 11.6 Hz$. Korean women's relative drop in pitch is therefore larger than male's in a polite situation according to this sample. 
+
+The model m9 can be read as following: The intercept for women/inf are $\approx 256 Hz$, when we look at men with the same attitude their pitch drops by $\approx 118 Hz$. Overall a polite attitude will result in a drop in pitch by $\approx 17 Hz$, however for men it will only be $-17.2+5.5 \approx 11.6 Hz$. Korean women's relative drop in pitch is therefore larger than male's in a polite situation according to this sample. 
   
   
 ### Exercise 3, part 2 --(KV)
