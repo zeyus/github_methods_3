@@ -20,7 +20,7 @@ Luke Ring: 202009983
 
 ```{r setup, include=FALSE}
 
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 library("tidyverse")
 library("pacman")
 pacman::p_load(

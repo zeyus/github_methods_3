@@ -19,7 +19,7 @@ Kristian Nøhr Villebro: 202005289
 Luke Ring: 202009983
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(fig.width = 10, fig.height = 10, echo = TRUE)
+knitr::opts_chunk$set(fig.width = 10, fig.height = 10, echo = TRUE, warning = FALSE)
 pacman::p_load("tidyverse", "lme4", "lmerTest", "piecewiseSEM", "dfoptim")
 ```
 

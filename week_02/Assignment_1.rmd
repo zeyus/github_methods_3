@@ -3,6 +3,7 @@ title: "Portfolio Assignment 1, Methods 3, 2021, autumn semester"
 author: "Study Group 8, Emma Rose Hahn (EH), Viara Krasteva (VK), Kristian Nøhr Villebro (KV), Luke Ring (LR)"
 output: html_document
 ---
+
 ### Student numbers 
 
 Emma Rose Hahn:202004249
@@ -10,9 +11,13 @@ Viara Krasteva: 202005673
 Kristian Nøhr Villebro: 202005289
 Luke Ring: 202009983
 
+### Note
+
+All work was done collectively as part of the study group, but for assessment purposes, student initials have been added to various sections indicating the person who worked on that section.
+
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 #load libraries
 pacman::p_load("tidyverse", "lme4", "piecewiseSEM")
 ```
@@ -29,7 +34,7 @@ politeness <- read.csv('politeness.csv') ## read in data
 
 1) Describe the dataset, such that someone who happened upon this dataset could understand the variables and what they contain  
    
-### Exercise 1, part 1-- (EH)
+### Exercise 1, part 1 -- (EH)
 
 The politeness dataset contains the data obtained from the [study of Korean formal and informal speech](https://doi.org/10.1016/j.wocn.2012.08.006) which investigated the fundamental frequency of male and female participants' speech in a variety of formal and informal scenarios.
 
@@ -215,7 +220,6 @@ Looking at the plot for the observed and the fitted values it looks as if the mo
 #making a model with two unicue intercepts and having attitude and gender as main effects
 m8 <- lmer(formula = f0mn ~ gender + attitude + (1 | subject) + (1 | scenario), data = politeness)
 summary(m8)
-fitted.values(m8)
 par(mfrow=c(1,2))
 qqnorm(fitted.values(m8))
 qqline(fitted.values(m8), col = "red")
@@ -244,11 +248,7 @@ piecewiseSEM::rsquared(c(m6, m8, m9))
 
 ### Exercise 3, part 3 --(KV)
 3)  Choose the model that you think describe the data the best - and write a short report on the main findings based on this model.
- 
-```{r}
-summary(m8)
- 
-```
+
 This dataset consists of the basic demographic information of 16 Korean participants, and their observed pitch in different situations that require either an informal or polite(formal) attitude.
 
 The model we chose as the best is m8. Consistent with the conclusions of the original oauthor's study, this model showed that women on average have a higher pitch than men BUT it also suggested a negative relationship between _attitude_ and pitch with p-values<0.001. It would seem that both Korean men's and women's frequency of voice drops when having a polite attitude. 
