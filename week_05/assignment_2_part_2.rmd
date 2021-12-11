@@ -1,10 +1,8 @@
 ---
-title: "practical_exercise_5, Methods 3, 2021, autumn semester"
-author: "study  group 8"
-date: '2021-10-27'
+title: "Portfolio Assignment 2, part 1, Methods 3, 2021, autumn semester"
+author: "Study Group 8, Emma Rose Hahn (EH), Viara Krasteva (VK), Kristian Nøhr Villebro (KV), Luke Ring (LR)"
 output:
   html_document: default
-  pdf_document: default
 ---
 
 <style type="text/css">
@@ -24,7 +22,7 @@ pacman::p_load(
     "dfoptim", "multcomp", "interactions")
 ```
 
-## Assignment 2 part 2
+# Portfolio Assignment 2 part 2
 
 ## EXERCISE 4 - Download and organise the data from experiment 1
 
@@ -81,7 +79,7 @@ exp1 <- mutate(exp1, # iii
 iv. In the previous experiment, the number of target frames was fixed at 3, whereas this time it the target frames was not fixed (they were integer numbers from 1-6), and in the last experiment where target.contrast was not fixed but for this experiment target.contrast was fixed at 0.1
 
 
-# EXERCISE 5 - Use log-likelihood ratio tests to evaluate logistic regression models
+## EXERCISE 5 - Use log-likelihood ratio tests to evaluate logistic regression models
 
 1) Do logistic regression - _correct_ as the dependent variable and _target.frames_ as the independent variable. (Make sure that you understand what _target.frames_ encode). Create two models - a pooled model and a partial-pooling model. The partial-pooling model should include a subject-specific intercept.  
     i. the likelihood-function for logistic regression is: $L(p)={\displaystyle\prod_{i=1}^Np^{y_i}(1-p)^{(1-y_i)}}$ (Remember the probability mass function for the Bernoulli Distribution). Create a function that calculates the likelihood.  
@@ -227,7 +225,7 @@ The intercept of 0.08009, does sound strange as one might incorrectly expect it 
 
 
 
-# EXERCISE 6 - Test linear hypotheses
+## EXERCISE 6 - Test linear hypotheses
 
 In this section we are going to test different hypotheses. We assume that we have already proved that more objective evidence (longer duration of stimuli) is sufficient to increase accuracy in and of itself and that more subjective evidence (higher PAS ratings) is also sufficient to increase accuracy in and of itself.
 
@@ -265,7 +263,7 @@ summary(m7)
 #trying out glht on m7 
 glht(m7)
 ```
-### Snippet for 6.2.i+ii+iii
+#### Snippet for 6.2.i+ii+iii
 ```{r, eval=FALSE}
 ## testing whether PAS 2 is different from PAS 1
 contrast.vector <- matrix(c(0, 0, -1, 1, 0, 0, 0, 0), nrow = 1)
@@ -301,7 +299,7 @@ print(summary(gh))
 
 
 
-# EXERCISE 7 - Estimate psychometric functions for the Perceptual Awareness Scale and evaluate them  
+## EXERCISE 7 - Estimate psychometric functions for the Perceptual Awareness Scale and evaluate them  
 
 We saw in 5.3 that the estimated functions went below chance at a target duration of 0 frames (0 ms). This does not seem reasonable, so we will be trying a different approach for fitting here.
 

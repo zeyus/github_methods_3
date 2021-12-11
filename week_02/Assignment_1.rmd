@@ -1,7 +1,6 @@
 ---
-title: "Portfolio_1, Methods 3, 2021, autumn semester"
-author: "Study group 8"
-date: "29/09/2021"
+title: "Portfolio Assignment 1, Methods 3, 2021, autumn semester"
+author: "Study Group 8, Emma Rose Hahn (EH), Viara Krasteva (VK), Kristian Nøhr Villebro (KV), Luke Ring (LR)"
 output: html_document
 ---
 
@@ -11,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 pacman::p_load("tidyverse","lme4","piecewiseSEM")
 ```
 
-# Assignment 1: Using mixed effects modelling to model hierarchical data
+# Portfolio Assignment 1: Using mixed effects modelling to model hierarchical data
 In this assignment we will be investigating the _politeness_ dataset of Winter and Grawunder (2012) and apply basic methods of multilevel modelling. 
 
 ```{r}
@@ -88,7 +87,7 @@ mm2
 
 For this dataset, scenario should be a factor, since the scenarios are not a continuous variable and depending on the prescribed scenario, the participants may have a different f0 (mean fundamental frequency of speech), and we are interested in following the trajectory of f0 across scenarios not as a variable that consistently decreases or increases, but a separate regression line showing the changes in f0 between the 7 different scenarios. And in order, to be able to see that crucial difference we need to consider the 'scenario' variable as a factor when we run a model predicting f0 across scenarios. 
 
-#### **Exercise 1, part 3** -- (EH)
+### **Exercise 1, part 3** -- (EH)
 3) Make a plot that includes a subplot for each subject that has _scenario_ on the x-axis and _f0mn_ on the y-axis and where points are colour coded according to _attitude_
     i. Describe the differences between subjects
 ```{r}
@@ -103,14 +102,14 @@ politeness %>% ggplot(aes(scenario, f0mn, color = attitude)) +
  
  We can visually observe that there are baseline differences between the male and female subjects' mean fundamental frequency of speech, where the males' f0 is consistently lower, across scenario and attitude. Between the different scenarios there is variability in the f0 values for both male and female subjects depending on both the scenario type and the attitude (informal or formal). There is a consistent tendency across scenario type and gender for the mean fundamental frequency of speech to be slightly higher when the attitude is informal as opposed to formal. This visual information inerpreted from this plot is consistent with the results of Winter and Grawunder (2012) 
 
-##Exercise 2 - comparison of models 
+## Exercise 2 - comparison of models 
 
 ```{r, eval=FALSE}
 mixed.model <- lmer(formula=..., data=...)
 example.formula <- formula(dep.variable ~ first.level.variable + (1 | second.level.variable))
 ```
 
-###Part 1 -- (VK)
+### Exercise 2, Part 1 -- (VK)
 1) Build four different models and do some comparisons
    
 ```{r}
@@ -149,7 +148,7 @@ Consequently, Of the three multi-level models,it is model m6, which includes ran
 
 Additionally, we see that model m6 has the lowest AIC and deviance.
 
-#### **Exercise 2, part 2 and 3** -- (LR)
+### **Exercise 2, part 2 and 3** -- (LR)
 
 2) Why is our single-level model bad?
     i. create a new data frame that has three variables, _subject_, _gender_ and _f0mn_, where _f0mn_ is the average of all responses of each subject, i.e. averaging across _attitude_ and_scenario_
@@ -202,7 +201,7 @@ Looking at the plot for the observed and the fitted values it looks as if the mo
     
 ## Exercise 3 - now with attitude 
 
-**Exercise 3, part 1**--(VK)
+### Exercise 3, part 1 --(VK)
 1) Carry on with the model with the two unique intercepts fitted (_scenario_ and _subject_) but now build a new model that has _attitude_ as a main effect besides _gender_. After create a separate model that besides the main effects of _attitude_ and _gender_ also include their interaction
 ```{r}
 #making a model with two unicue intercepts and having attitude and gender as main effects
@@ -224,7 +223,7 @@ summary(m9)
     The model m9 can be read as following: The intercept for women/inf are $ \approx 256 Hz$, when we look at men with the same attitude their pitch drops by $ \approx 118 Hz $. Overall a polite attitude will result in a drop in pitch by $ \approx 17 Hz$, however for men it will only be $ -17.2+5.5 \approx 11.6 Hz$. Korean women's relative drop in pitch is therefore larger than male's in a polite situation according to this sample. 
   
   
-  **Exercise 3, part 2**--(KV)
+ ### Exercise 3, part 2 --(KV)
   
 2) Compare the three models (1. gender as a main effect; 2. gender and attitude as main effects; 3. gender and attitude as main effects and the interaction between them. 
 
@@ -234,7 +233,7 @@ anova(m6, m8, m9)
 piecewiseSEM::rsquared(c(m6, m8, m9))
 ```
 
-**Exercise 3, part 3**--(KV)
+### Exercise 3, part 3 --(KV)
 3)  Choose the model that you think describe the data the best - and write a short report on the main findings based on this model.
  
 ```{r}
